@@ -1,0 +1,42 @@
+<odoo>
+    <record model="ir.ui.view" id="view_test_modulu_log_tree">
+        <field name="name">test.modulu.log.tree</field>
+        <field name="model">test_modulu.log</field>
+        <field name="arch" type="xml">
+            <tree create="0" edit="0" duplicate="0">
+                <field name="accessor_user_id"/>
+                <field name="access_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_test_modulu_log_form">
+        <field name="name">test.modulu.log.form</field>
+        <field name="model">test_modulu.log</field>
+        <field name="arch" type="xml">
+            <form create="0" edit="0    ">
+                <sheet>
+                    <group>
+                        <field name="accessed_password_id"/>
+                        <field name="accessor_user_id"/>
+                        <field name="access_date"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_test_modulu_log">
+        <field name="name">Test Modulu Users</field>
+        <field name="res_model">test_modulu.log</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="test_modulu_log_menu"
+              name="Logs"
+              action="action_test_modulu_log"
+              sequence="51"
+              parent="test_modulu_menu_root"
+    />
+
+</odoo>
