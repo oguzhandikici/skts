@@ -1,5 +1,5 @@
 <odoo>
     <!-- Root Menu -->
-    <menuitem name="Test Modulu" id="test_modulu_menu_root"/>
+    <menuitem name="Servis Kayıt ve Takip" id="skts_menu_root"/>
 
 </odoo>

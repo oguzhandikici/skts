@@ -1,2 +1,2 @@
-from . import test_modulu_users
-from . import test_modulu_log
+from . import skts_school
+from . import skts_student

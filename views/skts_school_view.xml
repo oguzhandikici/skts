@@ -1,0 +1,52 @@
+<odoo>
+    <record model="ir.ui.view" id="skts_school_view_tree">
+        <field name="name">skts.school.tree</field>
+        <field name="model">skts.school</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="term_ids" widget="many2many_tags"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="skts_school_view_form">
+        <field name="name">skts.school.form</field>
+        <field name="model">skts.school</field>
+        <field name="arch" type="xml">
+            <form autocomplete="off">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+                    <group string="Terms">
+                        <field name="term_ids" colspan="2" nolabel="1">
+                            <tree autocomplete="off" editable="bottom">
+                                <field name="name"/>
+                                <field name="date_start" autocomplete="off"/>
+                                <field name="date_end" autocomplete="off"/>
+                            </tree>
+                        </field>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="skts_school_action">
+        <field name="name">Schools</field>
+        <field name="res_model">skts.school</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="skts_school_menu"
+              name="Schools"
+              action="skts_school_action"
+              sequence="51"
+              parent="skts_menu_root"
+    />
+
+</odoo>

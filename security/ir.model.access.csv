@@ -1,5 +1,7 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 
-access_skts_user,skts_security_user,model_tablo1,group_skts_user,1,1,1,1
-access_skts_manager,skts_security_manager,model_tablo1,group_skts_user,1,1,1,1
-
+access_skts_school_manager,skts_school_manager,model_skts_school,group_skts_manager,1,1,1,1
+access_skts_school_term_manager,skts_school_term_manager,model_skts_school_term,group_skts_manager,1,1,1,1
+access_skts_student_manager,skts_student_manager,model_skts_student,group_skts_manager,1,1,1,1
+access_skts_student_contact_manager,skts_student_contact_manager,model_skts_student_contact,group_skts_manager,1,1,1,1
+access_skts_student_registration_manager,skts_student_registration_manager,model_skts_student_registration,group_skts_manager,1,1,1,1

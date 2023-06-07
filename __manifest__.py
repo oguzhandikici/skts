@@ -14,10 +14,10 @@
     "data": [
         'security/security_groups.xml',
         'security/ir.model.access.csv',
-        'security/access_rules.xml',
+        # 'security/access_rules.xml',
 
         'views/menu_item_view.xml',
-        'views/test_modulu_users_view.xml',
+        'views/skts_school_view.xml',
     ],
 
 }
