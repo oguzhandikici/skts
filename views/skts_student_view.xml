@@ -1,0 +1,65 @@
+<odoo>
+    <record model="ir.ui.view" id="skts_student_view_tree">
+        <field name="name">skts.student.tree</field>
+        <field name="model">skts.student</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="surname"/>
+                <field name="birth_year"/>
+                <field name="phone"/>
+                <field name="address"/>
+                <field name="district"/>
+                <field name="contact_ids"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="skts_student_view_form">
+        <field name="name">skts.student.form</field>
+        <field name="model">skts.student</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="surname"/>
+                            <field name="birth_year"/>
+                            <field name="phone" widget="phone"/>
+                        </group>
+                        <group>
+                            <field name="address"/>
+                            <field name="district"/>
+                            <field name="note"/>
+                        </group>
+                    </group>
+                    <group string="Contacts">
+                        <field name="contact_ids" colspan="2" nolabel="1">
+                            <tree editable="bottom">
+                                <field name="type"/>
+                                <field name="name"/>
+                                <field name="surname"/>
+                                <field name="phone" widget="phone"/>
+                            </tree>
+                        </field>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="skts_student_action">
+        <field name="name">Students</field>
+        <field name="res_model">skts.student</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="skts_student_menu"
+              name="Students"
+              action="skts_student_action"
+              sequence="52"
+              parent="skts_menu_root"/>
+
+</odoo>

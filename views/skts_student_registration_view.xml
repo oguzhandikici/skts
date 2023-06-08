@@ -1,0 +1,79 @@
+<odoo>
+    <record model="ir.ui.view" id="skts_student_registration_view_tree">
+        <field name="name">skts.student.registration.tree</field>
+        <field name="model">skts.student.registration</field>
+        <field name="arch" type="xml">
+            <tree duplicate="0">
+                <field name="student_id"/>
+                <field name="school_term_ids" widget="many2many_tags"/>
+                <field name="type"/>
+
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="skts_student_registration_view_form">
+        <field name="name">skts.student.registration.form</field>
+        <field name="model">skts.student.registration</field>
+        <field name="arch" type="xml">
+            <form duplicate="0">
+                <sheet>
+                    <div class="oe_title">
+                        <h1 class="d-flex flex-row">
+                            <field name="student_id" placeholder="Create a student or select if already exists..."
+                                   style="font-size: min(4vw, 2.6rem);"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Student Information" attrs="{'invisible':[('student_id','=',False)]}">
+
+                            <field name="student_name"/>
+                            <field name="student_surname"/>
+                            <field name="student_birth_year"/>
+                            <field name="student_phone"/>
+                            <field name="student_address"/>
+                            <field name="student_district"/>
+                            <field name="student_note" string="Student Note"/>
+
+
+                        </group>
+                        <group string="Registration Information" attrs="{'invisible':[('student_id','=',False)]}">
+                            <field name="school_term_ids"
+                                   options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True, 'no_create': True}">
+                                <tree create="0">
+                                    <field name="name"/>
+                                    <field name="school_id"/>
+                                </tree>
+                            </field>
+                            <field name="type"/>
+                            <field name="note" string="Registration Note"/>
+                        </group>
+                    </group>
+                    <group string="Student Contacts" attrs="{'invisible':[('student_id','=',False)]}">
+                        <field name="student_contact_ids" readonly="0" colspan="2" nolabel="1">
+                            <tree editable="bottom" no_open="1">
+                                <field name="type"/>
+                                <field name="name"/>
+                                <field name="surname"/>
+                                <field name="phone" widget="phone"/>
+                            </tree>
+                        </field>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="skts_student_registration_action">
+        <field name="name">Student Registration</field>
+        <field name="res_model">skts.student.registration</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="skts_student_registration_menu"
+              name="Student Registration"
+              action="skts_student_registration_action"
+              sequence="45"
+              parent="skts_menu_root"/>
+
+</odoo>

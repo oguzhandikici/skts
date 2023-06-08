@@ -18,6 +18,8 @@
 
         'views/menu_item_view.xml',
         'views/skts_school_view.xml',
+        'views/skts_student_view.xml',
+        'views/skts_student_registration_view.xml',
     ],
 
 }

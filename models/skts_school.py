@@ -1,12 +1,12 @@
-from odoo import models, fields
+from odoo import models, fields, api
 
 
 class SKTSSchool(models.Model):
     _name = "skts.school"
     _description = "Schools"
 
-    name = fields.Char(string="School Name")
-    term_ids = fields.One2many("skts.school.term", "school_id")
+    name = fields.Char(string="School Name", required=True)
+    term_ids = fields.One2many("skts.school.term", "school_id", string="Terms")
 
     active = fields.Boolean(default=True)
 
@@ -14,11 +14,21 @@ class SKTSSchool(models.Model):
 class SKTSSchoolTerm(models.Model):
     _name = "skts.school.term"
     _description = "School Terms"
+    _rec_name = "school_term_name"
+    # TODO: Kayıt formunda dönem eklerken güzel gözükmesi için <tree> view oluşturulacak.
+    school_term_name = fields.Char(compute="_compute_school_term_name")
+    name = fields.Char(string="Term Name", required=True)
+    date_start = fields.Date(string="Start Date", required=True)
+    date_end = fields.Date(string="End Date", required=True)
 
     school_id = fields.Many2one("skts.school", required=True)
 
-    name = fields.Char(string="Term Name", required=True)
-    date_start = fields.Date(string="Start Date")
-    date_end = fields.Date(string="End Date")
-
     active = fields.Boolean(default=True)
+
+    @api.depends("name", "school_id")
+    def _compute_school_term_name(self):
+        for record in self:
+            if record.id:
+                record.school_term_name = record.school_id.name + ' ' + '(' + record.name + ')'
+            else:
+                record.school_term_name = False

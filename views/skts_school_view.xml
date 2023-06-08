@@ -5,7 +5,6 @@
         <field name="arch" type="xml">
             <tree>
                 <field name="name"/>
-                <field name="term_ids" widget="many2many_tags"/>
             </tree>
         </field>
     </record>
@@ -14,20 +13,27 @@
         <field name="name">skts.school.form</field>
         <field name="model">skts.school</field>
         <field name="arch" type="xml">
-            <form autocomplete="off">
+            <form>
                 <sheet>
+                    <div class="oe_title">
+                        <h1 class="d-flex flex-row">
+                            <field name="name" placeholder="Enter School Name..." style="font-size: min(4vw, 2.6rem);"/>
+                        </h1>
+                    </div>
                     <group>
+
+                        <group/>
+
                         <group>
-                            <field name="name"/>
                             <field name="active" widget="boolean_toggle"/>
                         </group>
                     </group>
                     <group string="Terms">
                         <field name="term_ids" colspan="2" nolabel="1">
-                            <tree autocomplete="off" editable="bottom">
-                                <field name="name"/>
-                                <field name="date_start" autocomplete="off"/>
-                                <field name="date_end" autocomplete="off"/>
+                            <tree editable="bottom">
+                                <field name="name" placeholder="Enter a term name (Ex: 1st Term)..."/>
+                                <field name="date_start"/>
+                                <field name="date_end"/>
                             </tree>
                         </field>
                     </group>
@@ -46,7 +52,6 @@
               name="Schools"
               action="skts_school_action"
               sequence="51"
-              parent="skts_menu_root"
-    />
+              parent="skts_menu_root"/>
 
 </odoo>
