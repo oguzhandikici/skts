@@ -5,6 +5,7 @@
         <field name="arch" type="xml">
             <tree>
                 <field name="name"/>
+                <field name="term_ids"/>
             </tree>
         </field>
     </record>
@@ -31,6 +32,9 @@
                     <group string="Terms">
                         <field name="term_ids" colspan="2" nolabel="1">
                             <tree editable="bottom">
+                                <control>
+                                    <create string="Add a Term"/>
+                                </control>
                                 <field name="name" placeholder="Enter a term name (Ex: 1st Term)..."/>
                                 <field name="date_start"/>
                                 <field name="date_end"/>

@@ -1,7 +1,7 @@
 <odoo>
-    <record model="ir.ui.view" id="skts_student_view_tree">
-        <field name="name">skts.student.tree</field>
-        <field name="model">skts.student</field>
+    <record model="ir.ui.view" id="skts_person_view_tree">
+        <field name="name">skts.person.tree</field>
+        <field name="model">skts.person</field>
         <field name="arch" type="xml">
             <tree>
                 <field name="name"/>
@@ -15,9 +15,9 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="skts_student_view_form">
-        <field name="name">skts.student.form</field>
-        <field name="model">skts.student</field>
+    <record model="ir.ui.view" id="skts_person_view_form">
+        <field name="name">skts.person.form</field>
+        <field name="model">skts.person</field>
         <field name="arch" type="xml">
             <form>
                 <sheet>
@@ -38,6 +38,9 @@
                     <group string="Contacts">
                         <field name="contact_ids" colspan="2" nolabel="1">
                             <tree editable="bottom">
+                                <control>
+                                    <create string="Add a Contact"/>
+                                </control>
                                 <field name="type"/>
                                 <field name="name"/>
                                 <field name="surname"/>
@@ -50,15 +53,15 @@
         </field>
     </record>
 
-    <record model="ir.actions.act_window" id="skts_student_action">
-        <field name="name">Students</field>
-        <field name="res_model">skts.student</field>
+    <record model="ir.actions.act_window" id="skts_person_action">
+        <field name="name">Persons</field>
+        <field name="res_model">skts.person</field>
         <field name="view_mode">tree,form</field>
     </record>
 
-    <menuitem id="skts_student_menu"
-              name="Students"
-              action="skts_student_action"
+    <menuitem id="skts_person_menu"
+              name="Persons"
+              action="skts_person_action"
               sequence="52"
               parent="skts_menu_root"/>
 

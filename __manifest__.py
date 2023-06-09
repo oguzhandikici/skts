@@ -18,8 +18,9 @@
 
         'views/menu_item_view.xml',
         'views/skts_school_view.xml',
-        'views/skts_student_view.xml',
-        'views/skts_student_registration_view.xml',
+        'views/skts_school_term_view.xml',
+        'views/skts_person_view.xml',
+        'views/skts_person_registration_view.xml',
     ],
 
 }
