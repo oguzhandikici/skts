@@ -37,6 +37,7 @@
 
                         </group>
                         <group string="Registration Information" attrs="{'invisible':[('person_id','=',False)]}">
+                            <field name="school_ids"/>
                             <field name="school_term_ids"
                                    options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True, 'no_create': True}">
                                 <tree create="0">

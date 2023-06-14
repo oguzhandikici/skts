@@ -19,7 +19,7 @@
         <field name="name">skts.person.form</field>
         <field name="model">skts.person</field>
         <field name="arch" type="xml">
-            <form>
+            <form duplicate="0">
                 <sheet>
 
                     <group>

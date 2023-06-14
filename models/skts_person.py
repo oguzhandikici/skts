@@ -57,8 +57,11 @@ class SKTSPersonRegistration(models.Model):
     person_note = fields.Text(related="person_id.note", readonly=False, string="Person Note")
     person_contact_ids = fields.One2many(related="person_id.contact_ids", readonly=False)
 
-    school_term_ids = fields.Many2many("skts.school.term", "skts_person_registration_term",
-                                       "registration_id", "term_id", required=True, string="School Terms")
+    school_ids = fields.Many2many("skts.school", "skts_person_registration_school_rel",
+                                  "registration_id", "school_id", string="Schools")
+    school_term_ids = fields.Many2many("skts.school.term", "skts_person_registration_term_rel",
+                                       "registration_id", "term_id", required=True, string="School Terms",
+                                       domain="[('school_id', 'in', school_ids)]")
     school_terms_display = fields.Char(compute="_compute_school_terms_display", string="School Terms")
 
     @api.depends("school_term_ids")
