@@ -6,8 +6,6 @@
             <tree duplicate="0">
                 <field name="person_id"/>
                 <field name="school_terms_display"/>
-                <field name="type"/>
-
             </tree>
         </field>
     </record>
@@ -37,19 +35,19 @@
 
                         </group>
                         <group string="Registration Information" attrs="{'invisible':[('person_id','=',False)]}">
-                            <field name="school_ids"/>
-                            <field name="school_term_ids"
-                                   options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True, 'no_create': True}">
-                                <tree create="0">
+                            <field name="domain_school_term_ids" invisible="1"/>
+                            <field name="school_term_ids">
+                                <tree editable="bottom">
                                     <control>
                                         <create string="Add School-Term"/>
                                     </control>
-
-                                    <field name="name"/>
-                                    <field name="school_id"/>
+                                    <field name="school_term_id"
+                                           domain="[('id', 'not in', parent.domain_school_term_ids), ('open_to_register', '=', True)]"
+                                           options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True, 'no_create': True}"/>
+                                    <field name="school_term_type_id"
+                                           options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True, 'no_create': True}"/>
                                 </tree>
                             </field>
-                            <field name="type"/>
                             <field name="note"/>
                         </group>
                     </group>
@@ -82,6 +80,6 @@
               name="Person Registration"
               action="skts_person_registration_action"
               sequence="45"
-              parent="skts_menu_root"/>
+              parent="skts_root_menu"/>
 
 </odoo>

@@ -8,6 +8,7 @@
                 <field name="name"/>
                 <field name="date_start"/>
                 <field name="date_end"/>
+                <field name="open_to_register"/>
             </tree>
         </field>
     </record>
@@ -23,6 +24,6 @@
               action="skts_school_term_action"
               sequence="71"
               groups="base.group_no_one"
-              parent="skts_menu_root"/>
+              parent="skts_configuration_menu"/>
 
 </odoo>

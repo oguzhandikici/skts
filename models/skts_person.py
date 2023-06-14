@@ -57,11 +57,14 @@ class SKTSPersonRegistration(models.Model):
     person_note = fields.Text(related="person_id.note", readonly=False, string="Person Note")
     person_contact_ids = fields.One2many(related="person_id.contact_ids", readonly=False)
 
-    school_ids = fields.Many2many("skts.school", "skts_person_registration_school_rel",
-                                  "registration_id", "school_id", string="Schools")
-    school_term_ids = fields.Many2many("skts.school.term", "skts_person_registration_term_rel",
-                                       "registration_id", "term_id", required=True, string="School Terms",
-                                       domain="[('school_id', 'in', school_ids)]")
+    school_term_ids = fields.One2many("skts.person.registration.school.term", "person_registration_id", required=True, string="School Terms")
+    domain_school_term_ids = fields.One2many("skts.school.term", compute="_compute_domain_school_term_ids",
+                                             help="Will be used to domain 'school_term_id' inside of 'school_term_ids' to prevent duplicate record creation")
+
+    @api.depends("school_term_ids")
+    def _compute_domain_school_term_ids(self):
+        self.domain_school_term_ids = self.school_term_ids.mapped("school_term_id")
+
     school_terms_display = fields.Char(compute="_compute_school_terms_display", string="School Terms")
 
     @api.depends("school_term_ids")
@@ -70,11 +73,11 @@ class SKTSPersonRegistration(models.Model):
             if record.id:
                 computed_name = ''
                 if record.school_term_ids:
-                    schools = record.school_term_ids.mapped("school_id.name")
+                    schools = record.school_term_ids.mapped("school_term_id.school_id.name")
                     for school in schools:
                         if computed_name:
                             computed_name += ', '
-                        term_names = record.school_term_ids.filtered(lambda r: r.school_id.name == school).mapped("name")
+                        term_names = record.school_term_ids.filtered(lambda r: r.school_term_id.school_id.name == school).mapped("school_term_id.name")
                         computed_name += school + '(' + ' + '.join(term_names) + ')'
                     record.school_terms_display = computed_name
                     return True  # Stop here if all conditions are satisfied
@@ -82,9 +85,15 @@ class SKTSPersonRegistration(models.Model):
             record.school_terms_display = False
             return False
 
-    type = fields.Selection([
-        ("full_time", "Full Time"),
-        ("half_time", "Half Time"),
-    ], default="full_time", required=True)
-
     note = fields.Text(string="Registration Note")
+
+
+class SKTSPersonRegistrationSchoolTerm(models.Model):
+    _name = "skts.person.registration.school.term"
+    _description = "Person Registration School Terms"
+
+    person_registration_id = fields.Many2one("skts.person.registration", required=True)
+
+    school_term_id = fields.Many2one("skts.school.term", required=True)
+    school_term_type_id = fields.Many2one("skts.school.term.type", required=True,
+                                          domain="[('school_term_ids', 'in', [school_term_id])]")

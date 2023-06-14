@@ -63,6 +63,6 @@
               name="Persons"
               action="skts_person_action"
               sequence="52"
-              parent="skts_menu_root"/>
+              parent="skts_configuration_menu"/>
 
 </odoo>

@@ -38,6 +38,8 @@
                                 <field name="name" placeholder="Enter a term name (Ex: 1st Term)..."/>
                                 <field name="date_start"/>
                                 <field name="date_end"/>
+                                <field name="type_ids" widget="many2many_tags" options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True, 'no_create': True}"/>
+                                <field name="open_to_register" widget="boolean_toggle"/>
                             </tree>
                         </field>
                     </group>
@@ -56,6 +58,6 @@
               name="Schools"
               action="skts_school_action"
               sequence="51"
-              parent="skts_menu_root"/>
+              parent="skts_configuration_menu"/>
 
 </odoo>

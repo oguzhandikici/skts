@@ -1,5 +1,7 @@
 <odoo>
-    <!-- Root Menu -->
-    <menuitem name="Servis Kayıt ve Takip" id="skts_menu_root"/>
+
+    <menuitem name="Servis Kayıt ve Takip" id="skts_root_menu"/>
+
+    <menuitem name="Configuration" id="skts_configuration_menu" parent="skts_root_menu" sequence="90"/>
 
 </odoo>
