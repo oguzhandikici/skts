@@ -23,10 +23,14 @@
                     </div>
                     <group>
 
-                        <group/>
+                        <group>
+                            <field name="registration_type_ids" widget="many2many_checkboxes"
+                                   options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True, 'no_create': True}"/>
+
+                        </group>
 
                         <group>
-                            <field name="active" widget="boolean_toggle"/>
+                            <field name="active" widget="boolean_toggle" attrs="{'invisible':[('id','=',False)]}"/>
                         </group>
                     </group>
                     <group string="Terms">
@@ -38,8 +42,7 @@
                                 <field name="name" placeholder="Enter a term name (Ex: 1st Term)..."/>
                                 <field name="date_start"/>
                                 <field name="date_end"/>
-                                <field name="type_ids" widget="many2many_tags" options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True, 'no_create': True}"/>
-                                <field name="open_to_register" widget="boolean_toggle"/>
+                                <field name="open_to_register"/>
                             </tree>
                         </field>
                     </group>

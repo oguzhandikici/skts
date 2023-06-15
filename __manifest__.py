@@ -19,9 +19,10 @@
         'views/menu_item_view.xml',
         'views/skts_school_view.xml',
         'views/skts_school_term_view.xml',
-        'views/skts_school_term_type_view.xml',
+        'views/skts_school_registration_type_view.xml',
         'views/skts_person_view.xml',
-        'views/skts_person_registration_view.xml',
+        'views/skts_registration_view.xml',
+        # 'views/skts_registration_school_term_view.xml',
     ],
 
 }

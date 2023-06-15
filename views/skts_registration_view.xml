@@ -1,0 +1,105 @@
+<odoo>
+    <record model="ir.ui.view" id="skts_registration_view_tree">
+        <field name="name">skts.registration.tree</field>
+        <field name="model">skts.registration</field>
+        <field name="arch" type="xml">
+            <tree duplicate="0">
+                <field name="school_id"/>
+                <field name="school_term_ids" widget="many2many_tags"/>
+                <field name="type_id"/>
+                <field name="person_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="skts_registration_view_form">
+        <field name="name">skts.registration.form</field>
+        <field name="model">skts.registration</field>
+        <field name="arch" type="xml">
+            <form duplicate="0">
+                <sheet>
+                    <div class="oe_title">
+                        <h1 class="d-flex flex-row">
+                            <field name="person_id" placeholder="Type a person name and select..."
+                                   style="font-size: min(4vw, 2.6rem); width: 150%;"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Person Information" attrs="{'invisible':[('person_id','=',False)]}">
+
+                            <field name="person_name"/>
+                            <field name="person_surname"/>
+                            <field name="person_birth_year"/>
+                            <field name="person_phone"/>
+                            <field name="person_address"/>
+                            <field name="person_district"/>
+                            <field name="person_note"/>
+
+                        </group>
+                        <group string="Person Contacts" attrs="{'invisible':[('person_id','=',False)]}">
+                            <field name="person_contact_ids" colspan="2" nolabel="1">
+                                <tree editable="bottom" no_open="1">
+                                    <control>
+                                        <create string="Add a Contact"/>
+                                    </control>
+
+                                    <field name="type"/>
+                                    <field name="name"/>
+                                    <field name="surname"/>
+                                    <field name="phone" widget="phone"/>
+                                </tree>
+                            </field>
+
+                        </group>
+                    </group>
+
+                    <group string="Registration Information" attrs="{'invisible':[('person_id','=',False)]}">
+                        <group>
+                            <field name="school_id"
+                                   placeholder="Type and/or select a school..."
+                                   options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True, 'no_create': True}"/>
+                            <field name="type_id"
+                                   attrs="{'invisible':[('school_id','=',False)]}"
+                                   options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True, 'no_create': True}"/>
+                        </group>
+                        <group>
+                            <field name="note"
+                                   placeholder="You may add extra notes to this registration..."
+                                   attrs="{'invisible':[('school_id','=',False)]}"/>
+
+                        </group>
+
+
+                    </group>
+                    <group>
+                        <field name="school_term_ids"
+                               attrs="{'invisible':[('school_id','=',False)]}"
+                               context="{'tree_view_ref': 'skts.skts_registration_school_term_view_tree'}">
+                            <tree create="0" no_open="1">
+                                <control>
+                                    <create string="Add Terms"/>
+                                </control>
+                                <field name="name"/>
+                                <field name="date_start"/>
+                                <field name="date_end"/>
+                            </tree>
+                        </field>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="skts_registration_action">
+        <field name="name">Registrations</field>
+        <field name="res_model">skts.registration</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="skts_registration_menu"
+              name="Registration"
+              action="skts_registration_action"
+              sequence="45"
+              parent="skts_root_menu"/>
+
+</odoo>

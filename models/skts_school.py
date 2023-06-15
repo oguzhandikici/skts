@@ -6,7 +6,10 @@ class SKTSSchool(models.Model):
     _description = "Schools"
 
     name = fields.Char(string="School Name", required=True)
-    term_ids = fields.One2many("skts.school.term", "school_id", string="Terms", ondelete="restrict")
+    term_ids = fields.One2many("skts.school.term", "school_id", string="Terms")
+    registration_type_ids = fields.Many2many("skts.school.registration.type", "skts_school_registration_type_rel", "school_id",
+                                             "registration_type_id", string="Registration Types",
+                                             default=lambda self: self.env["skts.school.registration.type"].search([]))
 
     active = fields.Boolean(default=True)
 
@@ -14,40 +17,24 @@ class SKTSSchool(models.Model):
 class SKTSSchoolTerm(models.Model):
     _name = "skts.school.term"
     _description = "School Terms"
-    _rec_name = "school_term_name"
 
     school_id = fields.Many2one("skts.school", required=True)
-    school_term_name = fields.Char(compute="_compute_school_term_name", search="_search_school_term_name")
-    @api.depends("name", "school_id")
-    def _compute_school_term_name(self):
-        for record in self:
-            if record.id:
-                record.school_term_name = record.school_id.name + ' ' + '(' + record.name + ')'
-            else:
-                record.school_term_name = False
-
-    def _search_school_term_name(self, operator, value):
-        return ['|', ('name', operator, value), ('school_id.name', operator, value)]
 
     name = fields.Char(string="Term Name", required=True)
     date_start = fields.Date(string="Start Date", required=True)
     date_end = fields.Date(string="End Date", required=True)
-    type_ids = fields.Many2many("skts.school.term.type", "skts_school_term_type_rel", "school_term_id", "term_type_id",
-                                string="Types", default=lambda self: self.env['skts.school.term.type'].search([]).ids)
 
     open_to_register = fields.Boolean(default=False)
     active = fields.Boolean(default=True)
 
-
-    registration_ids = fields.Many2many("skts.person.registration", "skts_person_registration_term_rel",
+    registration_ids = fields.Many2many("skts.registration", "skts_registration_term_rel",
                                         "term_id", "registration_id", required=True, string="Registrations")
 
 
-
 class SKTSSchoolTermType(models.Model):
-    _name = "skts.school.term.type"
-    _description = "School Term Types"
+    _name = "skts.school.registration.type"
+    _description = "School Registration Types"
 
     name = fields.Char(required=True)
-    school_term_ids = fields.Many2many("skts.school.term", "skts_school_term_type_rel", "term_type_id",
-                                       "school_term_id", string="School Terms")
+    school_ids = fields.Many2many("skts.school", "skts_school_registration_type_rel", "registration_type_id",
+                                  "school_id", string="Schools")

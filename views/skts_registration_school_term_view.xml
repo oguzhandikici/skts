@@ -1,0 +1,54 @@
+<odoo>
+    <record model="ir.ui.view" id="skts_registration_school_term_view_tree">
+        <field name="name">skts.registration.school.term.tree</field>
+        <field name="model">skts.registration.school.term</field>
+        <field name="arch" type="xml">
+            <tree duplicate="0">
+                <control>
+                    <create string="Add School-Term"/>
+                </control>
+                <field name="school_id"/>
+                <field name="school_term_ids"
+                       widget="many2many_tags"
+                       domain="[('id', 'not in', parent.domain_school_term_ids), ('open_to_register', '=', True), ('school_id', '=', school_id)]"
+                       options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True, 'no_create': True}"/>
+                <field name="school_term_type_id"
+                       options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True, 'no_create': True}"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="skts_registration_school_term_view_form">
+        <field name="name">skts.registration.school.term.form</field>
+        <field name="model">skts.registration.school.term</field>
+        <field name="arch" type="xml">
+            <form duplicate="0">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="school_id"
+                                   options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True, 'no_create': True}"/>
+                            <field name="school_term_ids"
+                                   widget="many2many_checkboxes"
+                                   domain="[('id', 'not in', parent.domain_school_term_ids), ('open_to_register', '=', True), ('school_id', '=', school_id)]"
+                                   options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True, 'no_create': True}"/>
+                            <field name="school_term_type_id"
+                                   domain="[('school_term_ids', 'in', school_term_ids)]"
+                                   options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True, 'no_create': True}"/>
+                        </group>
+
+
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="skts_registration_school_term_action">
+        <field name="name">Registration School Terms</field>
+        <field name="res_model">skts.registration.school.term</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
+</odoo>
