@@ -1,0 +1,54 @@
+<odoo>
+    <record model="ir.ui.view" id="skts_registration_place_term_view_tree">
+        <field name="name">skts.registration.place.term.tree</field>
+        <field name="model">skts.registration.place.term</field>
+        <field name="arch" type="xml">
+            <tree duplicate="0">
+                <control>
+                    <create string="Add Place-Term"/>
+                </control>
+                <field name="place_id"/>
+                <field name="place_term_ids"
+                       widget="many2many_tags"
+                       domain="[('id', 'not in', parent.domain_place_term_ids), ('open_to_register', '=', True), ('place_id', '=', place_id)]"
+                       options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True, 'no_create': True}"/>
+                <field name="place_term_type_id"
+                       options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True, 'no_create': True}"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="skts_registration_place_term_view_form">
+        <field name="name">skts.registration.place.term.form</field>
+        <field name="model">skts.registration.place.term</field>
+        <field name="arch" type="xml">
+            <form duplicate="0">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="place_id"
+                                   options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True, 'no_create': True}"/>
+                            <field name="place_term_ids"
+                                   widget="many2many_checkboxes"
+                                   domain="[('id', 'not in', parent.domain_place_term_ids), ('open_to_register', '=', True), ('place_id', '=', place_id)]"
+                                   options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True, 'no_create': True}"/>
+                            <field name="place_term_type_id"
+                                   domain="[('place_term_ids', 'in', place_term_ids)]"
+                                   options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True, 'no_create': True}"/>
+                        </group>
+
+
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="skts_registration_place_term_action">
+        <field name="name">Registration Place Terms</field>
+        <field name="res_model">skts.registration.place.term</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
+</odoo>

@@ -2,51 +2,74 @@ from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 
 
-class SKTSPersonRegistration(models.Model):
+class RegistrationContact(models.Model):
+    _name = "skts.registration.contact"
+    _description = "Contacts"
+
+    registration_id = fields.Many2one("skts.registration")
+
+    name = fields.Char(required=True)
+    type = fields.Char()
+    phone = fields.Char()
+
+
+class Registration(models.Model):
     _name = "skts.registration"
     _description = "Registrations"
 
     state = fields.Selection([
-        ("application", "Application"),
+        ("registration", "Application"),
         ("approved_rejected", "Approved/Rejected"),
         ("approved", "Approved"),
         ("rejected", "Rejected")
-    ], default="application")
-    person_id = fields.Many2one("skts.person", required=True)
+    ], default="approved")
 
-    person_name = fields.Char(related="person_id.name", readonly=False)
-    person_surname = fields.Char(related="person_id.surname", readonly=False)
-    person_birth_year = fields.Char(related="person_id.birth_year", readonly=False)
-    person_phone = fields.Char(related="person_id.phone", readonly=False)
-    person_address = fields.Text(related="person_id.address", readonly=False)
-    person_district = fields.Char(related="person_id.district", readonly=False)
-    person_note = fields.Text(related="person_id.note", readonly=False, string="Personal Note")
-    person_contact_ids = fields.One2many(related="person_id.contact_ids", readonly=False)
+    name = fields.Char(required=True)
+    birth_year = fields.Char()
+    phone = fields.Char()
 
-    school_id = fields.Many2one("skts.school", required=True, ondelete="restrict")
-    type_id = fields.Many2one("skts.school.registration.type", string="Registration Type", required=True)
-    school_term_ids = fields.Many2many("skts.school.term", "skts_registration_school_term_rel", required=True,
-                                       string="School Terms", domain="[('school_id', '=', school_id), ('open_to_register', '=', True)]")
-    school_terms_display = fields.Char(compute="_compute_school_terms_display")
-    @api.depends("school_term_ids")
-    def _compute_school_terms_display(self):
-        for record in self:
-            computed_name = ""
-            for term_id in record.school_term_ids:
-                if computed_name and term_id:
-                    computed_name += ' + '
-                if term_id:
-                    computed_name += term_id.name
-            record.school_terms_display = computed_name
+    district = fields.Char(required=True)
+    neighbourhood = fields.Char(required=True)
+    address = fields.Text(required=True)
 
-    note = fields.Text(string="Registration Note")
+    note = fields.Text(help="Extra Notes")
+
+    contact_ids = fields.One2many("skts.registration.contact", "registration_id", string="Contacts")
+
+    place_id = fields.Many2one("skts.place", required=True, ondelete="restrict")
+
+    @api.onchange("place_id")
+    def _set_type_term(self):
+        if self.place_id:
+            type_ids = self.place_id.registration_type_ids
+            term_ids = self.place_id.term_ids.filtered(lambda r: r.open_to_register is True)
+            if len(type_ids) == 1:
+                self.type_id = self.place_id.registration_type_ids.id
+                self.hide_type = True
+            else:
+                self.hide_type = False
+            if len(term_ids) == 1:
+                self.place_term_ids = term_ids
+                self.hide_term = True
+            else:
+                self.hide_term = False
+
+    hide_type = fields.Boolean(compute="_set_type_term")
+    hide_term = fields.Boolean(compute="_set_type_term")
+
+    type_id = fields.Many2one("skts.place.registration.type", string="Registration Type", required=True)
+
+    place_term_ids = fields.Many2many("skts.place.term", "skts_registration_place_term_rel", required=True,
+                                       string="Terms", domain="[('place_id', '=', place_id), ('open_to_register', '=', True)]")
 
     @api.model_create_multi
     def create(self, vals_list):
         if vals_list:
             for value in vals_list:
-                if not value["school_term_ids"][0][2]:
-                    raise UserError(_("You must add at least 1 school term"))
+                if not value["place_term_ids"][0][2]:
+                    raise UserError(_("You must add at least 1 place term"))
+                if not value["contact_ids"]:
+                    raise UserError(_("You must add at least 1 contact"))
         return super().create(vals_list)
 
     def approve(self):

@@ -1,0 +1,9 @@
+<odoo>
+
+    <record id="skts.model_skts_registration" model="ir.model">
+        <field name="website_form_key">create_skts_registration</field>
+        <field name="website_form_access">True</field>
+        <field name="website_form_label">Create a Bus Service Registration</field>
+    </record>
+
+</odoo>

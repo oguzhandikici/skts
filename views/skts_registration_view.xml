@@ -4,11 +4,10 @@
         <field name="model">skts.registration</field>
         <field name="arch" type="xml">
             <tree duplicate="0">
-                <field name="school_id"/>
-                <field name="school_terms_display"/>
-                <field name="school_term_ids" widget="many2many_tags"/>
+                <field name="place_id"/>
+                <field name="name"/>
+                <field name="place_term_ids" widget="many2many_tags"/>
                 <field name="type_id"/>
-                <field name="person_id"/>
             </tree>
         </field>
     </record>
@@ -30,24 +29,25 @@
                 <sheet>
                     <div class="oe_title">
                         <h1 class="d-flex flex-row">
-                            <field name="person_id" placeholder="Type a person name and select..."
+                            <field name="place_id" placeholder="Type a place name and select..."
+                                   options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True, 'no_create': True}"
                                    style="font-size: min(4vw, 2.6rem); width: 150%;"/>
                         </h1>
                     </div>
                     <group>
-                        <group string="Person Information" attrs="{'invisible':[('person_id','=',False)]}">
+                        <group string="Person Information">
 
-                            <field name="person_name"/>
-                            <field name="person_surname"/>
-                            <field name="person_birth_year"/>
-                            <field name="person_phone"/>
-                            <field name="person_address"/>
-                            <field name="person_district"/>
-                            <field name="person_note"/>
+                            <field name="name"/>
+                            <field name="birth_year"/>
+                            <field name="phone"/>
+                            <field name="district"/>
+                            <field name="neighbourhood"/>
+                            <field name="address"/>
+                            <field name="note"/>
 
                         </group>
-                        <group string="Person Contacts" attrs="{'invisible':[('person_id','=',False)]}">
-                            <field name="person_contact_ids" colspan="2" nolabel="1">
+                        <group string="Person Contacts">
+                            <field name="contact_ids" colspan="2" nolabel="1">
                                 <tree editable="bottom" no_open="1">
                                     <control>
                                         <create string="Add a Contact"/>
@@ -55,7 +55,6 @@
 
                                     <field name="type"/>
                                     <field name="name"/>
-                                    <field name="surname"/>
                                     <field name="phone" widget="phone"/>
                                 </tree>
                             </field>
@@ -63,28 +62,30 @@
                         </group>
                     </group>
 
-                    <group string="Registration Information" attrs="{'invisible':[('person_id','=',False)]}">
+                    <group string="Registration Information">
                         <group>
-                            <field name="school_id"
-                                   placeholder="Type and/or select a school..."
-                                   options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True, 'no_create': True}"/>
+                            <field name="hide_type" invisible="1"/>
                             <field name="type_id"
-                                   attrs="{'invisible':[('school_id','=',False)]}"
+                                   domain="[('place_ids', 'in', place_id)]"
+                                   attrs="{
+                                   'invisible':['|', ('place_id','=',False), ('hide_type','=',True)],
+                                   'readonly':[('hide_type','=',True)]
+                                   }"
+                                   force_save="1"
                                    options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True, 'no_create': True}"/>
                         </group>
-                        <group>
-                            <field name="note"
-                                   placeholder="You may add extra notes to this registration..."
-                                   attrs="{'invisible':[('school_id','=',False)]}"/>
 
-                        </group>
-
+                    <group/>
 
                     </group>
                     <group>
-                        <field name="school_term_ids"
-                               attrs="{'invisible':[('school_id','=',False)]}"
-                               context="{'tree_view_ref': 'skts.skts_registration_school_term_view_tree'}">
+                        <field name="hide_term" invisible="1"/>
+                        <field name="place_term_ids"
+                               attrs="{
+                                   'invisible':['|', ('place_id','=',False), ('hide_term','=',True)],
+                                   'readonly':[('hide_term','=',True)]
+                                   }"
+                               context="{'tree_view_ref': 'skts.skts_registration_place_term_view_tree'}">
                             <tree create="0" no_open="1">
                                 <control>
                                     <create string="Add Terms"/>

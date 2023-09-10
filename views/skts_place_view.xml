@@ -1,7 +1,7 @@
 <odoo>
-    <record model="ir.ui.view" id="skts_school_view_tree">
-        <field name="name">skts.school.tree</field>
-        <field name="model">skts.school</field>
+    <record model="ir.ui.view" id="skts_place_view_tree">
+        <field name="name">skts.place.tree</field>
+        <field name="model">skts.place</field>
         <field name="arch" type="xml">
             <tree>
                 <field name="name"/>
@@ -11,15 +11,15 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="skts_school_view_form">
-        <field name="name">skts.school.form</field>
-        <field name="model">skts.school</field>
+    <record model="ir.ui.view" id="skts_place_view_form">
+        <field name="name">skts.place.form</field>
+        <field name="model">skts.place</field>
         <field name="arch" type="xml">
-            <form duplicate="0">
+            <form>
                 <sheet>
                     <div class="oe_title">
                         <h1 class="d-flex flex-row">
-                            <field name="name" placeholder="Enter School Name..." style="font-size: min(4vw, 2.6rem);"/>
+                            <field name="name" placeholder="Enter Place Name..." style="font-size: min(4vw, 2.6rem);"/>
                         </h1>
                     </div>
                     <group>
@@ -52,15 +52,15 @@
         </field>
     </record>
 
-    <record model="ir.actions.act_window" id="skts_school_action">
-        <field name="name">Schools</field>
-        <field name="res_model">skts.school</field>
+    <record model="ir.actions.act_window" id="skts_place_action">
+        <field name="name">Places</field>
+        <field name="res_model">skts.place</field>
         <field name="view_mode">tree,form</field>
     </record>
 
-    <menuitem id="skts_school_menu"
-              name="Schools"
-              action="skts_school_action"
+    <menuitem id="skts_place_menu"
+              name="Places"
+              action="skts_place_action"
               sequence="51"
               parent="skts_configuration_menu"/>
 

@@ -30,8 +30,9 @@
                             <field name="phone" widget="phone"/>
                         </group>
                         <group>
-                            <field name="address"/>
                             <field name="district"/>
+                            <field name="neighbourhood"/>
+                            <field name="address"/>
                             <field name="note"/>
                         </group>
                     </group>
