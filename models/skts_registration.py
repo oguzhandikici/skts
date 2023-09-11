@@ -18,7 +18,7 @@ class Registration(models.Model):
     _description = "Registrations"
 
     state = fields.Selection([
-        ("registration", "Application"),
+        ("registration", "Registration"),
         ("approved_rejected", "Approved/Rejected"),
         ("approved", "Approved"),
         ("rejected", "Rejected")
@@ -64,6 +64,8 @@ class Registration(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        print(vals_list)
+        raise
         if vals_list:
             for value in vals_list:
                 if not value["place_term_ids"][0][2]:
