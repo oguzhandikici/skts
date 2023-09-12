@@ -1,5 +1,6 @@
-from odoo import models, fields, api, _
+from odoo import models, fields, api, SUPERUSER_ID, _
 from odoo.exceptions import UserError
+import json
 
 
 class RegistrationContact(models.Model):
@@ -62,17 +63,47 @@ class Registration(models.Model):
     place_term_ids = fields.Many2many("skts.place.term", "skts_registration_place_term_rel", required=True,
                                        string="Terms", domain="[('place_id', '=', place_id), ('open_to_register', '=', True)]")
 
+    def website_one2many_formatter(self, o2m_field, o2m_cln_lines, value):
+        o2m_values = []
+
+        for cln_line in o2m_cln_lines:
+            o2m_val = {}
+            o2m_line = (0, 0, o2m_val)
+
+            for cln in cln_line:
+                if cln in value:
+                    o2m_val[cln] = value[cln]
+                    del value[cln]
+            o2m_values.append(o2m_line)
+
+        value[o2m_field] = o2m_values
+        return value
+
     @api.model_create_multi
     def create(self, vals_list):
-        print(vals_list)
-        raise
-        if vals_list:
+        if self.env.user.id == SUPERUSER_ID:  # Website registration
+            vals_list_new = []
+            for value in vals_list:
+                form_context = json.loads(value['website_context'])
+                del value['website_context']
+                for key in form_context:
+                    if "_ids" in key:
+                        value_new = self.website_one2many_formatter(key, form_context[key], value)
+
+                        vals_list_new.append(value_new)
+                    else:
+                        vals_list_new.append(value)
+            print(vals_list_new)
+
+            return super().create(vals_list_new)
+
+        else:  # Normal registration
             for value in vals_list:
                 if not value["place_term_ids"][0][2]:
                     raise UserError(_("You must add at least 1 place term"))
                 if not value["contact_ids"]:
                     raise UserError(_("You must add at least 1 contact"))
-        return super().create(vals_list)
+            return super().create(vals_list)
 
     def approve(self):
         self.state = "approved"
