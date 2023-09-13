@@ -63,20 +63,24 @@ class Registration(models.Model):
     place_term_ids = fields.Many2many("skts.place.term", "skts_registration_place_term_rel", required=True,
                                        string="Terms", domain="[('place_id', '=', place_id), ('open_to_register', '=', True)]")
 
-    def website_one2many_formatter(self, o2m_field, o2m_cln_lines, value):
+    def website_one2many_formatter(self, o2m_field_name, website_context, value):
+        o2m_fields = website_context['o2m_fields']
+        website_fields = website_context['website_fields']
         o2m_values = []
 
-        for cln_line in o2m_cln_lines:
+        for cln_line in website_fields:
             o2m_val = {}
             o2m_line = (0, 0, o2m_val)
 
-            for cln in cln_line:
-                if cln in value:
-                    o2m_val[cln] = value[cln]
-                    del value[cln]
+            for i in range(len(cln_line)):
+                website_field = cln_line[i]
+                o2m_field = o2m_fields[i]
+                if website_field in value:
+                    o2m_val[o2m_field] = value[website_field]
+                    del value[website_field]
             o2m_values.append(o2m_line)
 
-        value[o2m_field] = o2m_values
+        value[o2m_field_name] = o2m_values
         return value
 
     @api.model_create_multi
@@ -84,16 +88,14 @@ class Registration(models.Model):
         if self.env.user.id == SUPERUSER_ID:  # Website registration
             vals_list_new = []
             for value in vals_list:
-                form_context = json.loads(value['website_context'])
+                website_context = json.loads(value['website_context'])
                 del value['website_context']
-                for key in form_context:
-                    if "_ids" in key:
-                        value_new = self.website_one2many_formatter(key, form_context[key], value)
-
+                for field in website_context:
+                    if "_ids" in field:
+                        value_new = self.website_one2many_formatter(field, website_context[field], value)
                         vals_list_new.append(value_new)
                     else:
                         vals_list_new.append(value)
-            print(vals_list_new)
 
             return super().create(vals_list_new)
 

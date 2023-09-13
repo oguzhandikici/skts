@@ -9,7 +9,7 @@ class SKTSPlace(models.Model):
     term_ids = fields.One2many("skts.place.term", "place_id", string="Terms")
     registration_type_ids = fields.Many2many("skts.place.registration.type", "skts_place_registration_type_rel", "place_id",
                                              "registration_type_id", string="Registration Types")
-
+    open_to_register = fields.Boolean(default=True)
     active = fields.Boolean(default=True)
 
 

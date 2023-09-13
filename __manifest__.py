@@ -13,7 +13,7 @@
     'qweb': [],
     "data": [
         'data/data.xml',
-        
+
         'security/security_groups.xml',
         'security/ir.model.access.csv',
         # 'security/access_rules.xml',
@@ -25,5 +25,9 @@
         'views/skts_registration_view.xml',
 
     ],
-
+    'assets': {
+        'web.assets_frontend': [
+            'skts/static/src/js/website_form.js',
+        ]
+    }
 }
