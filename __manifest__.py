@@ -12,7 +12,8 @@
 
     'qweb': [],
     "data": [
-        'data/data.xml',
+        'data/model.xml',
+        'data/params.xml',
 
         'security/security_groups.xml',
         'security/ir.model.access.csv',

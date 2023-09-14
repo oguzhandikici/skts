@@ -1,0 +1,10 @@
+<odoo>
+    <data noupdate="1">
+
+        <record id="skts_website_form_controller_model_param" model="ir.config_parameter">
+            <field name="key">skts.website_form_controller_models</field>
+            <field name="value">["skts.place", "skts.place.term", "skts.place.registration.type"]</field>
+        </record>
+
+    </data>
+</odoo>
