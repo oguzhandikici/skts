@@ -19,6 +19,16 @@ class SKTSPlaceTerm(models.Model):
 
     place_id = fields.Many2one("skts.place", required=True)
 
+    # website_display_name = fields.Char(compute="_compute_website_display_name")
+    #
+    # @api.depends("name", "date_start", "date_end")
+    # def _compute_website_display_name(self):
+    #     for record in self:
+    #         if record.name and record.date_start and record.date_end:
+    #             record.website_display_name = record.name + "(" + record.date_start + " - " + record.date_end
+    #         else:
+    #             record.website_display_name = ""
+
     name = fields.Char(string="Term Name", required=True)
     date_start = fields.Date(string="Start Date", required=True)
     date_end = fields.Date(string="End Date", required=True)

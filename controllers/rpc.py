@@ -3,7 +3,7 @@ from odoo.http import request
 
 
 class RegistrationWebsiteFormController(http.Controller):
-    @http.route('/registration/form/domain_fields', type='json', method=['POST'], auth='public', csrf=False)
+    @http.route('/registration/form/skts_search', type='json', methods=['POST'], auth='public', csrf=False)
     def registration_website_form(self, **post):
         model = post.get('model')
         domain = post.get('domain')
