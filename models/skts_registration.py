@@ -9,8 +9,8 @@ class RegistrationContact(models.Model):
 
     registration_id = fields.Many2one("skts.registration")
 
-    name = fields.Char(required=True)
-    type = fields.Char()
+    type = fields.Char(required=True)
+    name = fields.Char()
     phone = fields.Char()
 
 
@@ -46,17 +46,8 @@ class Registration(models.Model):
             term_ids = self.place_id.term_ids.filtered(lambda r: r.open_to_register is True)
             if len(type_ids) == 1:
                 self.type_id = self.place_id.registration_type_ids.id
-                self.hide_type = True
-            else:
-                self.hide_type = False
             if len(term_ids) == 1:
                 self.place_term_ids = term_ids
-                self.hide_term = True
-            else:
-                self.hide_term = False
-
-    hide_type = fields.Boolean(compute="_set_type_term")
-    hide_term = fields.Boolean(compute="_set_type_term")
 
     type_id = fields.Many2one("skts.place.registration.type", string="Registration Type", required=True)
 
@@ -78,9 +69,11 @@ class Registration(models.Model):
                 if website_field in value:
                     o2m_val[o2m_field] = value[website_field]
                     del value[website_field]
-            o2m_values.append(o2m_line)
+            if bool(o2m_val):
+                o2m_values.append(o2m_line)
 
-        value[o2m_field_name] = o2m_values
+        if o2m_values:
+            value[o2m_field_name] = o2m_values
         return value
 
     @api.model_create_multi
@@ -105,7 +98,9 @@ class Registration(models.Model):
                     raise UserError(_("You must add at least 1 place term"))
                 if not value["contact_ids"]:
                     raise UserError(_("You must add at least 1 contact"))
-            return super().create(vals_list)
+            res = super().create(vals_list)
+            self.env.user.notify_success(message=_('Record created successfully!'))
+            return res
 
     def approve(self):
         self.state = "approved"

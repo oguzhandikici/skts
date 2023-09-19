@@ -2,6 +2,7 @@
     <record model="ir.ui.view" id="skts_place_term_view_tree">
         <field name="name">skts.place.term.tree</field>
         <field name="model">skts.place.term</field>
+        <field name="priority">10</field>
         <field name="arch" type="xml">
             <tree>
                 <field name="place_id"/>
@@ -13,8 +14,8 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="skts_place_term_view_tree">
-        <field name="name">skts.place.term.tree</field>
+    <record model="ir.ui.view" id="skts_place_term_registration_view_tree">
+        <field name="name">skts.place.term.registration.tree</field>
         <field name="model">skts.place.term</field>
         <field name="priority">100</field>
         <field name="arch" type="xml">
@@ -34,9 +35,9 @@
     </record>
 
     <menuitem id="skts_place_term_menu"
-              name="Place Terms"
+              name="Place Terms(DEBUG)"
               action="skts_place_term_action"
-              sequence="71"
+              sequence="90"
               groups="base.group_no_one"
               parent="skts_configuration_menu"/>
 

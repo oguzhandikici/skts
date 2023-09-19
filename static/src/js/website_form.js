@@ -4,7 +4,7 @@ odoo.define('skts.website_form', function(require) {
     if (window.location.pathname === '/registration/form') {
         var ajax = require('web.ajax');
 
-        function setFields(placeField) {
+        async function setFields(placeField) {
             var selectedPlaceID = placeField.options[placeField.selectedIndex].value;
             var typeField = document.querySelector('[name="type_id"]');
             var placeTermField = document.querySelector('div[name="place_term_ids"]');
@@ -13,18 +13,16 @@ odoo.define('skts.website_form', function(require) {
             placeTermField.innerHTML = '';
 
             // TERM IDS
-            ajax.jsonRpc('/registration/form/skts_search', 'call', {
+            await ajax.jsonRpc('/registration/form/skts_search', 'call', {
                 model: 'skts.place.term',
                 domain: [
-                    ['place_id', '=', selectedPlaceID],
+                    ['place_id', '=', parseInt(selectedPlaceID)],
                     ['open_to_register', '=', true]
                 ],
-                fields: ['id', 'name'],
+                fields: ['id', 'website_display_name'],
             }).then(function(terms) {
                 terms.forEach(function(term) {
                     // Yeni bir div oluşturun
-                    console.log(1)
-                    console.log(yeniDiv)
                     var yeniDiv = document.createElement('div');
                     yeniDiv.className = 'checkbox col-12';
 
@@ -36,16 +34,19 @@ odoo.define('skts.website_form', function(require) {
                     var yeniCheckbox = document.createElement('input');
                     yeniCheckbox.type = 'checkbox';
                     yeniCheckbox.className = 's_website_form_input form-check-input';
-                    yeniCheckbox.id = "customid" + term.id;
+                    yeniCheckbox.id = "checkboxid" + term.id;
                     yeniCheckbox.name = 'place_term_ids';
                     yeniCheckbox.value = term.id;
                     yeniCheckbox.required = '1';
                     yeniCheckbox.setAttribute('data-fill-with', 'undefined');
+                    if (terms.length === 1) {
+                        yeniCheckbox.click();
+                    }
 
                     // Yeni bir label oluşturun
                     var yeniLabel = document.createElement('label');
                     yeniLabel.className = 'form-check-label s_website_form_check_label';
-                    yeniLabel.setAttribute('for', term.id);
+                    yeniLabel.setAttribute('for', "checkboxid" + term.id);
                     yeniLabel.textContent = term.website_display_name; // Bu satırı düzelttim.
 
                     // Checkbox ve label'ı ilgili div içine ekleyin
@@ -54,19 +55,17 @@ odoo.define('skts.website_form', function(require) {
                     yeniDiv.appendChild(yeniFormCheck);
 
                     // Yeni oluşturulan div'i "placeTermField" değişkenine ekleyin (hatalı değişken adı düzeltildi).
-                    console.log(yeniDiv)
                     placeTermField.appendChild(yeniDiv);
-                    console.log(placeTermField)
 
                 });
 
 
             });
             // TYPE ID
-            ajax.jsonRpc('/registration/form/skts_search', 'call', {
+            await ajax.jsonRpc('/registration/form/skts_search', 'call', {
                 model: 'skts.place.registration.type',
                 domain: [
-                    ['place_ids', 'in', [selectedPlaceID]]
+                    ['place_ids', 'in', [parseInt(selectedPlaceID)]]
                 ],
                 fields: ['id', 'name'],
             }).then(function(types) {
@@ -79,11 +78,11 @@ odoo.define('skts.website_form', function(require) {
             });
         }
 
-        function registrationWebsiteForm() {
+        async function registrationWebsiteForm() {
             var placeField = document.querySelector('[name="place_id"]');
             placeField.innerHTML = '';
 
-            ajax.jsonRpc('/registration/form/skts_search', 'call', {
+            await ajax.jsonRpc('/registration/form/skts_search', 'call', {
                 model: 'skts.place',
                 domain: [
                     ['open_to_register', '=', true]
@@ -97,6 +96,8 @@ odoo.define('skts.website_form', function(require) {
                     placeField.appendChild(option);
                 });
             });
+            placeField.selectedIndex = 0
+            setFields(placeField);
 
             placeField.addEventListener('change', function() {
                 setFields(placeField);

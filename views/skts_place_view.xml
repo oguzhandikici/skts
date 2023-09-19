@@ -5,7 +5,7 @@
         <field name="arch" type="xml">
             <tree>
                 <field name="name"/>
-                <field name="term_ids"/>
+                <field name="term_ids" widget="many2many_tags"/>
                 <field name="open_to_register" widget="boolean_toggle"/>
             </tree>
         </field>
@@ -24,10 +24,15 @@
                     </div>
                     <group>
 
-                        <group>
-                            <field name="registration_type_ids" widget="many2many_checkboxes"
-                                   options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True, 'no_create': True}"/>
-
+                        <group string="Types">
+                            <field name="registration_type_ids" colspan="2" nolabel="1">
+                                <tree editable="bottom">
+                                    <control>
+                                        <create string="Add a Type"/>
+                                    </control>
+                                    <field name="name"/>
+                                </tree>
+                            </field>
                         </group>
 
                         <group>
@@ -35,6 +40,7 @@
                             <field name="active" widget="boolean_toggle" attrs="{'invisible':[('id','=',False)]}"/>
                         </group>
                     </group>
+
                     <group string="Terms">
                         <field name="term_ids" colspan="2" nolabel="1">
                             <tree editable="bottom">
@@ -44,7 +50,7 @@
                                 <field name="name" placeholder="Enter a term name (Ex: 1st Term)..."/>
                                 <field name="date_start"/>
                                 <field name="date_end"/>
-                                <field name="open_to_register"/>
+                                <field name="open_to_register" widget="boolean_toggle"/>
                             </tree>
                         </field>
                     </group>
@@ -52,6 +58,7 @@
             </form>
         </field>
     </record>
+
 
     <record model="ir.actions.act_window" id="skts_place_action">
         <field name="name">Places</field>

@@ -10,7 +10,6 @@ class RegistrationWebsiteFormController(http.Controller):
         fields = post.get('fields')
 
         models_allowed = request.env["ir.config_parameter"].sudo().get_param("skts.website_form_controller_models")
-
         if model in models_allowed:
             demo_user = request.env.ref('base.user_demo')
             res = request.env[model].with_user(demo_user.id).search_read(domain, fields)
