@@ -65,7 +65,7 @@ odoo.define('skts.website_form', function(require) {
             await ajax.jsonRpc('/registration/form/skts_search', 'call', {
                 model: 'skts.place.registration.type',
                 domain: [
-                    ['place_ids', 'in', [parseInt(selectedPlaceID)]]
+                    ['place_id', '=', parseInt(selectedPlaceID)]
                 ],
                 fields: ['id', 'name'],
             }).then(function(types) {

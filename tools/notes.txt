@@ -1,0 +1,81 @@
+Odoo Default Theme Color:
+Benim Color: #5b73ab
+Elif Color: #eb6d46
+
+Form Width:
+C:\Users\tai\SoftwareProjects\odoo16\oca_addons\web_responsive\static\src\legacy\scss\web_responsive.scss
+.o_form_sheet 75%
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Deploy
+---------------------------
+Secure deploying: https://www.odoo.com/tr_TR/forum/yardim-1/how-to-increase-the-security-of-odoo-90135
+
+From our vast experience on Odoo implementations so far, we suggest following steps to secure your Odoo.
+
+Set private ssh key for your Odoo server.
+
+Start your Odoo in SSL mode.
+
+Install Nginx in your Ubuntu Server.
+
+Stop access of all unnecessary ports from firewall of your Ubuntu Server.
+
+Set proper data access rights & access rules into your Odoo instance.
+
+Set proper authentication method for your PostgreSQL database user.
+
+Set tricky password for PostgreSQL user.
+
+Apply encryption on Database and Odoo user passwords.
+
+Set Tricky password for Super Admin.
+
+Request all your ERP users to set difficult password.
+
+Give FTP access for your ERP users and don't allow them to create files out of their directory on your Ubuntu Server.
+
+Set proper access rights on your custom addons and default Odoo addons via chmod and chown commands.
+
+Have a look on /var/log/postgresql/postgresql-9.1-main.log file for malware attack on your database.
+
+Manage your Odoo log file properly.
+
+Transfer database & custom addons backup to remote place at frequent amount of time.
+
+Change and set tricky password for detault postgres user in your database server.
+
+Stop xmlrpc if you don't want your ERP to connect from 3rd party systems. ( set xmlrpc=False in your config file )
+
+Remove "Manage Database" link from home page of your live Odoo instance. ( it's suggestion only )
+
+Ignore installation of Odoo where multiple other websites are hosted.
+
+We highly recommend to ignore creation of any kind of demo database in Live Odoo instance.
+
+Ignore to host your Odoo in Web hosting servers, always host Odoo in trusted VPS sites. ( Amazon, Raskspace, DigitalOcen, Myhosting etc..)
+
+Monitor Incoming and outgoing TCP/IP traffics in your Ubuntu Server.  Few of our customers for whom we have implemented Odoo for more then 150+ users, they hired their own server administrator to monitor incoming and outgoing TCP/IP traffics. ( Visit this link )
+
+Never give full access of your server to your Odoo service providers, always give them folder access of their own custom addons with their separate user. ( It's advisable to not share root user password to anyone. )
+
+If customer can afford healthy cost, we always suggest them to set up their own in-house hosting server instead of VPS.
+
+You can direct ask any Odoo related problem to us via a tweet. Tweet us to @EmiproTech
+

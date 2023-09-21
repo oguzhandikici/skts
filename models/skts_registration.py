@@ -6,6 +6,7 @@ import json
 class RegistrationContact(models.Model):
     _name = "skts.registration.contact"
     _description = "Contacts"
+    _order = "id desc"
 
     registration_id = fields.Many2one("skts.registration")
 
@@ -18,12 +19,14 @@ class Registration(models.Model):
     _name = "skts.registration"
     _description = "Registrations"
 
+    active = fields.Boolean(default=True)
+
     state = fields.Selection([
-        ("registration", "Registration"),
-        ("approved_rejected", "Approved/Rejected"),
-        ("approved", "Approved"),
-        ("rejected", "Rejected")
-    ], default="approved")
+        ("awaiting_registration", "Awaiting Registration"),
+        ("registered", "Registered"),
+        ("rejected", "Rejected"),
+        ("cancelled", "Cancelled"),
+    ], default="registered")
 
     name = fields.Char(required=True)
     birth_year = fields.Char()
@@ -103,4 +106,10 @@ class Registration(models.Model):
             return res
 
     def approve(self):
-        self.state = "approved"
+        self.write({'state': "registered", 'active': True})
+
+    def reject(self):
+        if self.state == 'awaiting_registration':
+            self.write({'state': "rejected", 'active': False})
+        elif self.state == 'registered':
+            self.write({'state': "cancelled", 'active': False})

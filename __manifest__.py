@@ -9,7 +9,8 @@
 
     "depends": [
         'base', 'hr', 'website',
-        'web_notify', 'web_responsive', 'web_group_expand', 'web_refresher', 'web_save_discard_button'
+        'web_notify', 'web_responsive', 'web_group_expand', 'web_refresher', 'web_save_discard_button', 'base_fontawesome',
+        'web_no_auto_save'
     ],
     "external_dependencies": {'python': []},
 

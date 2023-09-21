@@ -3,11 +3,19 @@
         <field name="name">skts.registration.tree</field>
         <field name="model">skts.registration</field>
         <field name="arch" type="xml">
-            <tree expand="1" duplicate="0">
+            <tree expand="1" duplicate="0"
+                  decoration-primary="state=='awaiting_registration'" decoration-bf="state=='awaiting_registration'"
+                  decoration-success="state=='registered'"
+                  decoration-muted="state=='cancelled'"
+                  decoration-danger="state=='rejected'"
+            >
                 <field name="name"/>
                 <field name="place_id"/>
                 <field name="place_term_ids" widget="many2many_tags"/>
                 <field name="type_id"/>
+                <field name="state" invisible="1"/>
+                <field name="create_date" widget="date"/>
+                <field name="write_date" widget="date"/>
             </tree>
         </field>
     </record>
@@ -18,13 +26,20 @@
         <field name="arch" type="xml">
             <form duplicate="0">
                 <header>
-                    <button name="approve" string="Approve" type="object" data-hotkey="a" class="btn-primary"
-                            attrs="{'invisible':[('state','not in',['registration'])]}"/>
+                    <button name="approve" string="Approve" type="object" class="btn-success"
+                            icon="fa-check"
+                            confirm="Are you sure approving this registration?"
+                            attrs="{'invisible':[('state','not in',['awaiting_registration','rejected'])]}"/>
+                    <button name="reject" string="Reject" type="object" class="btn-danger"
+                            icon="fa-times"
+                            confirm="Are you sure rejecting this registration?"
+                            attrs="{'invisible':[('state','not in',['awaiting_registration'])]}"/>
+                    <button name="reject" string="Cancel" type="object" class="btn-secondary"
+                            icon="fa-ban"
+                            confirm="Are you sure cancelling this registration?"
+                            attrs="{'invisible':[('state','not in',['registered'])]}"/>
 
-                    <field name="state" widget="statusbar" statusbar_visible="registration,approved_rejected"
-                           attrs="{'invisible':[('state','in',['rejected', 'approved'])]}"/>
-                    <field name="state" widget="statusbar" statusbar_visible="registration"
-                           attrs="{'invisible':[('state','not in',['rejected', 'approved'])]}"/>
+                    <field name="state" widget="statusbar" statusbar_visible="awaiting_registration,registered"/>
                 </header>
                 <sheet>
                     <div class="oe_title">
@@ -34,7 +49,10 @@
                                    style="font-size: min(4vw, 2.6rem); width: 150%;"/>
                         </h1>
                     </div>
+
                     <group>
+
+
                         <group string="Person Information">
 
                             <field name="name"/>
@@ -45,9 +63,7 @@
                             <field name="address"/>
                             <field name="note"/>
 
-                        </group>
-                        <group string="Person Contacts">
-                            <field name="contact_ids" colspan="2" nolabel="1">
+                            <field name="contact_ids">
                                 <tree editable="bottom" no_open="1">
                                     <control>
                                         <create string="Add a Contact"/>
@@ -58,36 +74,33 @@
                                     <field name="phone" widget="phone"/>
                                 </tree>
                             </field>
-
                         </group>
-                    </group>
 
-                    <group string="Registration Information">
-                        <group>
+
+                        <group string="Registration Information">
                             <field name="type_id"
                                    domain="[('place_id', '=', place_id)]"
                                    attrs="{'invisible':[('place_id','=',False)]}"
                                    force_save="1"
                                    options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True, 'no_create': True}"/>
+
+                            <field name="place_term_ids"
+                                   attrs="{'invisible':[('place_id','=',False)]}"
+                                   context="{'tree_view_ref': 'skts.skts_place_term_registration_view_tree'}">
+                                <tree create="0" no_open="1">
+                                    <control>
+                                        <create string="Add Terms"/>
+                                    </control>
+                                    <field name="name"/>
+                                    <field name="date_start"/>
+                                    <field name="date_end"/>
+                                </tree>
+                            </field>
+
+
                         </group>
-
-                        <group/>
-
                     </group>
-                    <group>
-                        <field name="place_term_ids"
-                               attrs="{'invisible':[('place_id','=',False)]}"
-                               context="{'tree_view_ref': 'skts.skts_place_term_registration_view_tree'}">
-                            <tree create="0" no_open="1">
-                                <control>
-                                    <create string="Add Terms"/>
-                                </control>
-                                <field name="name"/>
-                                <field name="date_start"/>
-                                <field name="date_end"/>
-                            </tree>
-                        </field>
-                    </group>
+
                 </sheet>
             </form>
         </field>
@@ -103,7 +116,10 @@
                        ('place_id.name','ilike',self),
                        ('name','ilike',self),
                        ]"/>
+                <filter name="filter_show_passives_too" string="Show Passive Records Also"
+                        domain="[('active','in',[True,False])]"/>
                 <separator/>
+
                 <group expand="1" string="Group By">
                     <filter name="group_place" string="Place" context="{'group_by':'place_id'}"/>
                     <filter name="group_state" string="State" context="{'group_by':'state'}"/>
@@ -118,7 +134,6 @@
         <field name="view_mode">tree,form</field>
         <field name="context">{
             'search_default_group_place': 1,
-            'search_default_group_state': 1,
             }
         </field>
     </record>
