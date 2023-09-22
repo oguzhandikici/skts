@@ -14,8 +14,8 @@
                 <field name="place_term_ids" widget="many2many_tags"/>
                 <field name="type_id"/>
                 <field name="state" invisible="1"/>
-                <field name="create_date" widget="date"/>
-                <field name="write_date" widget="date"/>
+                <field name="create_date" widget="date" invisible="context.get('mylist_view', True)"/>
+                <field name="write_date" widget="date" invisible="context.get('mylist_view', True)"/>
             </tree>
         </field>
     </record>
@@ -25,7 +25,7 @@
         <field name="model">skts.registration</field>
         <field name="arch" type="xml">
             <form duplicate="0">
-                <header>
+                <header invisible="context.get('mylist_view', True)">
                     <button name="approve" string="Approve" type="object" class="btn-success"
                             icon="fa-check"
                             confirm="Are you sure approving this registration?"
@@ -83,7 +83,6 @@
                                    attrs="{'invisible':[('place_id','=',False)]}"
                                    force_save="1"
                                    options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True, 'no_create': True}"/>
-
                             <field name="place_term_ids"
                                    attrs="{'invisible':[('place_id','=',False)]}"
                                    context="{'tree_view_ref': 'skts.skts_place_term_registration_view_tree'}">
@@ -96,6 +95,38 @@
                                     <field name="date_end"/>
                                 </tree>
                             </field>
+                            <field name="morning_driver_id"
+                                   options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True, 'no_create': True}"
+                                   attrs="{
+                            'invisible':[('state','not in',['registered'])],
+                            'readonly':[('state','not in',['registered'])]
+                            }"/>
+                            <field name="morning_hour" widget="float_time"
+                                   attrs="{
+                            'invisible':[('state','not in',['registered'])],
+                            'readonly':[('state','not in',['registered'])]
+                            }"/>
+                            <field name="morning_sequence"
+                                   attrs="{
+                            'invisible':[('state','not in',['registered'])],
+                            'readonly':[('state','not in',['registered'])]
+                            }"/>
+                            <field name="evening_driver_id"
+                                   options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True, 'no_create': True}"
+                                   attrs="{
+                            'invisible':[('state','not in',['registered'])],
+                            'readonly':[('state','not in',['registered'])]
+                            }"/>
+                            <field name="evening_hour" widget="float_time"
+                                   attrs="{
+                            'invisible':[('state','not in',['registered'])],
+                            'readonly':[('state','not in',['registered'])]
+                            }"/>
+                            <field name="evening_sequence"
+                                   attrs="{
+                            'invisible':[('state','not in',['registered'])],
+                            'readonly':[('state','not in',['registered'])]
+                            }"/>
 
 
                         </group>
@@ -116,11 +147,14 @@
                        ('place_id.name','ilike',self),
                        ('name','ilike',self),
                        ]"/>
-                <filter name="filter_show_passives_too" string="Show Passive Records Also"
-                        domain="[('active','in',[True,False])]"/>
+
+                <group string="Admin Filters" groups="skts.group_skts_manager">
+                    <filter name="filter_show_passives_too" string="Show Passive Records Also"
+                            domain="[('active','in',[True,False])]"/>
+                </group>
                 <separator/>
 
-                <group expand="1" string="Group By">
+                <group string="Group By">
                     <filter name="group_place" string="Place" context="{'group_by':'place_id'}"/>
                     <filter name="group_state" string="State" context="{'group_by':'state'}"/>
                 </group>

@@ -1,0 +1,40 @@
+<odoo>
+
+    <record model="ir.actions.act_window" id="skts_registration_my_list_morning_action">
+        <field name="name">Registrations</field>
+        <field name="res_model">skts.registration</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('morning_driver_id.user_id', '=', uid)]</field>
+        <field name="context">{'create': False, 'edit': False, 'delete': False, 'mylist_view': True}</field>
+
+    </record>
+
+    <record model="ir.actions.act_window" id="skts_registration_my_list_evening_action">
+        <field name="name">Registrations</field>
+        <field name="res_model">skts.registration</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('evening_driver_id.user_id', '=', uid)]</field>
+        <field name="context">{'create': False, 'edit': False, 'delete': False, 'mylist_view': True}</field>
+
+    </record>
+
+    <menuitem id="skts_registration_my_list_menu"
+              name="My List"
+              sequence="55"
+              parent="skts_root_menu"/>
+
+
+    <menuitem id="skts_registration_my_list_morning_menu"
+              name="My Morning List"
+              action="skts_registration_my_list_morning_action"
+              sequence="5"
+              parent="skts_registration_my_list_menu"/>
+
+    <menuitem id="skts_registration_my_list_evening_menu"
+              name="My Evening List"
+              action="skts_registration_my_list_evening_action"
+              sequence="10"
+              parent="skts_registration_my_list_menu"/>
+
+
+</odoo>

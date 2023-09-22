@@ -20,7 +20,6 @@ class Registration(models.Model):
     _description = "Registrations"
 
     active = fields.Boolean(default=True)
-
     state = fields.Selection([
         ("awaiting_registration", "Awaiting Registration"),
         ("registered", "Registered"),
@@ -31,16 +30,23 @@ class Registration(models.Model):
     name = fields.Char(required=True)
     birth_year = fields.Char()
     phone = fields.Char()
-
     district = fields.Char(required=True)
     neighbourhood = fields.Char(required=True)
     address = fields.Text(required=True)
-
     note = fields.Text(help="Extra Notes")
-
     contact_ids = fields.One2many("skts.registration.contact", "registration_id", string="Contacts")
 
     place_id = fields.Many2one("skts.place", required=True, ondelete="restrict")
+    type_id = fields.Many2one("skts.place.registration.type", string="Registration Type", required=True)
+    place_term_ids = fields.Many2many("skts.place.term", "skts_registration_place_term_rel", required=True,
+                                       string="Terms", domain="[('place_id', '=', place_id), ('open_to_register', '=', True)]")
+
+    morning_driver_id = fields.Many2one("skts.driver")
+    morning_hour = fields.Float()
+    morning_sequence = fields.Integer()
+    evening_driver_id = fields.Many2one("skts.driver")
+    evening_hour = fields.Float()
+    evening_sequence = fields.Integer()
 
     @api.onchange("place_id")
     def _set_type_term(self):
@@ -52,10 +58,6 @@ class Registration(models.Model):
             if len(term_ids) == 1:
                 self.place_term_ids = term_ids
 
-    type_id = fields.Many2one("skts.place.registration.type", string="Registration Type", required=True)
-
-    place_term_ids = fields.Many2many("skts.place.term", "skts_registration_place_term_rel", required=True,
-                                       string="Terms", domain="[('place_id', '=', place_id), ('open_to_register', '=', True)]")
 
     def website_one2many_formatter(self, o2m_field_name, website_context, value):
         o2m_fields = website_context['o2m_fields']
