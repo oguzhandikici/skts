@@ -1,0 +1,97 @@
+<odoo>
+
+    <record id="skts_registration_my_list_kanban_view" model="ir.ui.view">
+        <field name="name">skts.registration.kanban</field>
+        <field name="model">skts.registration</field> <!-- Model adınızı buraya ekleyin -->
+        <field name="arch" type="xml">
+            <kanban quick_create="false">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="place_term_ids"/>
+                <field name="type_id"/>
+                <field name="place_id"/>
+
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <div class="oe_kanban_details">
+                                <strong class="o_kanban_record_title">
+                                    <field name="name"/>
+                                </strong>
+                                <div class="o_kanban_tags_section">
+                                    <field name="place_term_ids" widget="many2many_tags"
+                                           options="{'color_field': 'color'}"/>
+                                </div>
+
+                                <ul>
+                                    <li>
+                                        <i class="fa fa-map-marker" title="Address"/>
+                                        <field name="address"/>
+                                    </li>
+                                </ul>
+                                <div class="o_kanban_record_bottom">
+
+                                    <div class="oe_kanban_bottom_right">
+                                        <a
+                                                t-attf-href="tel:+905326294246"
+                                                class="oe_kanban_action oe_kanban_action_a">
+                                            <span
+                                                    class="fa fa-phone"
+                                                    role="img" aria-label="Call Contact"
+                                                    title="Call Contact">
+                                            </span>
+                                            <!--                                            <span t-if="record.contract_renewal_overdue.raw_value"-->
+                                            <!--                                                  class="fa fa-exclamation-triangle" t-att-style="'color:red;'"-->
+                                            <!--                                                  role="img" aria-label="Attention: renewal overdue"-->
+                                            <!--                                                  title="Attention: renewal overdue">-->
+                                            <!--                                            </span>-->
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+
+    <record model="ir.actions.act_window" id="skts_registration_my_list_morning_action">
+        <field name="name">My Morning List</field>
+        <field name="res_model">skts.registration</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('morning_driver_id.user_id', '=', uid)]</field>
+        <field name="context">{'create': False, 'edit': False, 'delete': False, 'mylist_view': True}</field>
+
+    </record>
+
+    <record model="ir.actions.act_window" id="skts_registration_my_list_evening_action">
+        <field name="name">My Evening List</field>
+        <field name="res_model">skts.registration</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('evening_driver_id.user_id', '=', uid)]</field>
+        <field name="context">{'create': False, 'edit': False, 'delete': False, 'mylist_view': True}</field>
+
+    </record>
+
+    <menuitem id="skts_registration_my_list_menu"
+              name="My List"
+              sequence="55"
+              parent="skts_root_menu"/>
+
+
+    <menuitem id="skts_registration_my_list_morning_menu"
+              name="My Morning List"
+              action="skts_registration_my_list_morning_action"
+              sequence="5"
+              parent="skts_registration_my_list_menu"/>
+
+    <menuitem id="skts_registration_my_list_evening_menu"
+              name="My Evening List"
+              action="skts_registration_my_list_evening_action"
+              sequence="10"
+              parent="skts_registration_my_list_menu"/>
+
+
+</odoo>

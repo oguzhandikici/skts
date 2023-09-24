@@ -25,7 +25,7 @@
 
         'views/menu_item_view.xml',
         'views/skts_registration_view.xml',
-        'views/skts_registration_my_list_actions.xml',
+        'views/skts_registration_my_list_view.xml',
 
         'views/skts_place_view.xml',
         'views/skts_place_term_view.xml',

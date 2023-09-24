@@ -10,6 +10,7 @@ class RegistrationContact(models.Model):
 
     registration_id = fields.Many2one("skts.registration")
 
+    sequence = fields.Integer()
     type = fields.Char(required=True)
     name = fields.Char()
     phone = fields.Char()
@@ -48,6 +49,14 @@ class Registration(models.Model):
     evening_hour = fields.Float()
     evening_sequence = fields.Integer()
 
+    def call_contact(self):
+        return {
+            'type': 'ir.actions.act_url',
+            'target': 'new',
+            'url': 'tel://+905326294246',
+            # 'url': 'https://odoo.com',
+        }
+
     @api.onchange("place_id")
     def _set_type_term(self):
         if self.place_id:
@@ -57,7 +66,6 @@ class Registration(models.Model):
                 self.type_id = self.place_id.registration_type_ids.id
             if len(term_ids) == 1:
                 self.place_term_ids = term_ids
-
 
     def website_one2many_formatter(self, o2m_field_name, website_context, value):
         o2m_fields = website_context['o2m_fields']
@@ -115,3 +123,7 @@ class Registration(models.Model):
             self.write({'state': "rejected", 'active': False})
         elif self.state == 'registered':
             self.write({'state': "cancelled", 'active': False})
+
+    def unlink(self):
+        if self.state == 'registered':
+            raise UserError(_("You need to Cancel this record before deleting."))

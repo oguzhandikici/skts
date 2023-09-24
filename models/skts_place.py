@@ -18,6 +18,7 @@ class SKTSPlaceTerm(models.Model):
 
     place_id = fields.Many2one("skts.place", required=True)
 
+    color = fields.Integer('Color Index', default=5)
     website_display_name = fields.Char(compute="_compute_website_display_name")
 
     @api.depends("name", "date_start", "date_end")

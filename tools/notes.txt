@@ -1,9 +1,10 @@
 Odoo Default Theme Color:
+addons/web/static/src/scss/primary_variables.scss
 Benim Color: #5b73ab
 Elif Color: #eb6d46
 
 Form Width:
-C:\Users\tai\SoftwareProjects\odoo16\oca_addons\web_responsive\static\src\legacy\scss\web_responsive.scss
+web_responsive\static\src\legacy\scss\web_responsive.scss
 .o_form_sheet 75%
 
 
