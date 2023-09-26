@@ -2,50 +2,53 @@
 
     <record id="skts_registration_my_list_kanban_view" model="ir.ui.view">
         <field name="name">skts.registration.kanban</field>
-        <field name="model">skts.registration</field> <!-- Model adınızı buraya ekleyin -->
+        <field name="model">skts.registration</field>
         <field name="arch" type="xml">
-            <kanban quick_create="false">
+            <kanban quick_create="false" class="o_kanban_mobile" default_order="morning_sequence">
                 <field name="id"/>
                 <field name="name"/>
                 <field name="place_term_ids"/>
                 <field name="type_id"/>
+                <field name="morning_sequence" widget="handle"/>
                 <field name="place_id"/>
+                <field name="full_address"/>
+                <field name="contact_html" widget="html"/>
 
                 <templates>
                     <t t-name="kanban-box">
+
                         <div class="oe_kanban_global_click">
-                            <div class="oe_kanban_details">
-                                <strong class="o_kanban_record_title">
+                            <div>
+                                <h5>
                                     <field name="name"/>
-                                </strong>
-                                <div class="o_kanban_tags_section">
-                                    <field name="place_term_ids" widget="many2many_tags"
-                                           options="{'color_field': 'color'}"/>
+                                </h5>
+                                <div class="mt-2">
+                                    <figcaption class="blockquote-footer">
+                                        (<field name="morning_hour" widget="float_time"/>)
+                                    </figcaption>
+                                </div>
+                                <div>
+                                    <em>
+                                        - <field name="note"/>
+                                    </em>
+                                </div>
+                                <div class="mt-1">
+                                    <field name="full_address"/>
                                 </div>
 
-                                <ul>
-                                    <li>
-                                        <i class="fa fa-map-marker" title="Address"/>
-                                        <field name="address"/>
-                                    </li>
-                                </ul>
-                                <div class="o_kanban_record_bottom">
 
-                                    <div class="oe_kanban_bottom_right">
-                                        <a
-                                                t-attf-href="tel:+905326294246"
-                                                class="oe_kanban_action oe_kanban_action_a">
-                                            <span
-                                                    class="fa fa-phone"
-                                                    role="img" aria-label="Call Contact"
-                                                    title="Call Contact">
-                                            </span>
-                                            <!--                                            <span t-if="record.contract_renewal_overdue.raw_value"-->
-                                            <!--                                                  class="fa fa-exclamation-triangle" t-att-style="'color:red;'"-->
-                                            <!--                                                  role="img" aria-label="Attention: renewal overdue"-->
-                                            <!--                                                  title="Attention: renewal overdue">-->
-                                            <!--                                            </span>-->
+                                <div class="o_kanban_record_bottom mt-3">
+
+                                    <div class="oe_kanban_bottom_left" style="padding-left: 3px;">
+                                        <a t-attf-href="https://maps.google.com/maps?q={{record.full_address.raw_value}}"
+                                           target="_blank" style="transform: scale(1.4);"
+                                           class="fa fa-map-marker oe_kanban_action oe_kanban_action_a float-start ml-1">
                                         </a>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right float-end pe-auto">
+
+                                        <field name="contact_html" widget="html"/>
+
                                     </div>
                                 </div>
                             </div>

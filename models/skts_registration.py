@@ -13,7 +13,7 @@ class RegistrationContact(models.Model):
     sequence = fields.Integer()
     type = fields.Char(required=True)
     name = fields.Char()
-    phone = fields.Char()
+    phone = fields.Char(required=True)
 
 
 class Registration(models.Model):
@@ -34,8 +34,10 @@ class Registration(models.Model):
     district = fields.Char(required=True)
     neighbourhood = fields.Char(required=True)
     address = fields.Text(required=True)
+    full_address = fields.Text(compute="_compute_full_address")
     note = fields.Text(help="Extra Notes")
     contact_ids = fields.One2many("skts.registration.contact", "registration_id", string="Contacts")
+    contact_html = fields.Html(compute="_compute_contact_html")
 
     place_id = fields.Many2one("skts.place", required=True, ondelete="restrict")
     type_id = fields.Many2one("skts.place.registration.type", string="Registration Type", required=True)
@@ -49,17 +51,31 @@ class Registration(models.Model):
     evening_hour = fields.Float()
     evening_sequence = fields.Integer()
 
-    def call_contact(self):
-        return {
-            'type': 'ir.actions.act_url',
-            'target': 'new',
-            'url': 'tel://+905326294246',
-            # 'url': 'https://odoo.com',
-        }
+    @api.depends("full_address")
+    def _compute_full_address(self):
+        for record in self:
+            if record.neighbourhood and record.address and record.district:
+                record.full_address = f"{record.neighbourhood}, {record.address}, {record.district}"
+            else:
+                record.full_address = ""
+
+    @api.depends("contact_ids")
+    def _compute_contact_html(self):
+        for record in self:
+            html = ""
+            count = 0
+            for contact_id in record.contact_ids:
+                padding_right = "padding-right: 20px;" if count > 0 else "padding-right: 5px;"
+                # TODO: html'i parametre yap
+                html += f'<a href="tel:{contact_id.phone}" target="_self" style="transform: scale(1.4);{padding_right}" class="oe_kanban_action oe_kanban_action_a float-end"> <span class="fa fa-phone" role="img" aria-label="Call {contact_id.type}" title="Call {contact_id.type}"> </span> </a>'
+                count += 1
+            record.contact_html = html
 
     @api.onchange("place_id")
     def _set_type_term(self):
         if self.place_id:
+            self.type_id = False
+            self.place_term_ids = False
             type_ids = self.place_id.registration_type_ids
             term_ids = self.place_id.term_ids.filtered(lambda r: r.open_to_register is True)
             if len(type_ids) == 1:
