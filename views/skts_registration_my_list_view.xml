@@ -4,7 +4,8 @@
         <field name="name">skts.registration.kanban</field>
         <field name="model">skts.registration</field>
         <field name="arch" type="xml">
-            <kanban quick_create="false" class="o_kanban_mobile" default_order="morning_sequence">
+            <kanban class="o_kanban_mobile" default_order="morning_sequence" group_create="0" group_delete="0"
+                    group_edit="0" archivable="0" quick_create="0">
                 <field name="id"/>
                 <field name="name"/>
                 <field name="place_term_ids"/>
@@ -19,32 +20,39 @@
 
                         <div class="oe_kanban_global_click">
                             <div>
-                                <h5>
+                                <h4>
                                     <field name="name"/>
-                                </h5>
-                                <div class="mt-2">
-                                    <figcaption class="blockquote-footer">
-                                        (<field name="morning_hour" widget="float_time"/>)
-                                    </figcaption>
-                                </div>
-                                <div>
+                                    <small class="text-muted" t-if="record.morning_hour!=false">
+                                        ━━ (<field name="morning_hour" widget="float_time"/>)
+                                    </small>
+                                </h4>
+                                <div class="mb-1">
                                     <em>
-                                        - <field name="note"/>
+                                        -
+                                        <field name="note"/>
                                     </em>
                                 </div>
-                                <div class="mt-1">
+                                <a t-attf-href="https://maps.google.com/maps?q={{record.full_address.raw_value}}"
+                                   target="_blank"
+                                   class="fa fa-map-marker oe_kanban_action oe_kanban_action_a float-start ml-1 mt-1">
+                                </a>
+                                <a t-attf-href="https://maps.google.com/maps?q={{record.full_address.raw_value}}"
+                                   target="_blank" style="padding-left: 3px;"
+                                   class="oe_kanban_action oe_kanban_action_a">
                                     <field name="full_address"/>
-                                </div>
 
-
+                                </a>
                                 <div class="o_kanban_record_bottom mt-3">
 
-                                    <div class="oe_kanban_bottom_left" style="padding-left: 3px;">
-                                        <a t-attf-href="https://maps.google.com/maps?q={{record.full_address.raw_value}}"
-                                           target="_blank" style="transform: scale(1.4);"
-                                           class="fa fa-map-marker oe_kanban_action oe_kanban_action_a float-start ml-1">
-                                        </a>
-                                    </div>
+                                    <!--                                    <div style="text-align: right;">-->
+                                    <!--                                        <u>-->
+                                    <!--                                            <small class="text-muted">Aksiyonlar</small>-->
+                                    <!--                                        </u>-->
+                                    <!--                                    </div>-->
+
+                                    <div class="oe_kanban_bottom_left" style="padding-left: 3px;"/>
+
+
                                     <div class="oe_kanban_bottom_right float-end pe-auto">
 
                                         <field name="contact_html" widget="html"/>
@@ -65,7 +73,7 @@
         <field name="res_model">skts.registration</field>
         <field name="view_mode">kanban,tree,form</field>
         <field name="domain">[('morning_driver_id.user_id', '=', uid)]</field>
-        <field name="context">{'create': False, 'edit': False, 'delete': False, 'mylist_view': True}</field>
+        <field name="context">{'create': False, 'edit': False, 'delete': False, 'mylist_view': True, 'group_by': ['morning_driver_id']}</field>
 
     </record>
 
@@ -74,7 +82,7 @@
         <field name="res_model">skts.registration</field>
         <field name="view_mode">kanban,tree,form</field>
         <field name="domain">[('evening_driver_id.user_id', '=', uid)]</field>
-        <field name="context">{'create': False, 'edit': False, 'delete': False, 'mylist_view': True}</field>
+        <field name="context">{'create': False, 'delete': False, 'mylist_view': True, 'group_by': ['evening_driver_id']}</field>
 
     </record>
 

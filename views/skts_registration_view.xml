@@ -62,7 +62,7 @@
                             <field name="note"/>
 
                             <field name="contact_ids">
-                                <tree editable="bottom" no_open="1">
+                                <tree editable="bottom" no_open="1" default_order="sequence">
                                     <control>
                                         <create string="Add a Contact"/>
                                     </control>
@@ -70,7 +70,9 @@
                                     <field name="sequence" widget="handle"/>
                                     <field name="type"/>
                                     <field name="name"/>
-                                    <field name="phone" widget="phone"/>
+                                    <field name="phone"/>
+                                    <field name="action_html" widget="html" nolabel="1"/>
+
                                 </tree>
                             </field>
                         </group>

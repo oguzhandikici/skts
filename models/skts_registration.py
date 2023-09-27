@@ -6,7 +6,7 @@ import json
 class RegistrationContact(models.Model):
     _name = "skts.registration.contact"
     _description = "Contacts"
-    _order = "id desc"
+    _order = "registration_id, sequence asc"
 
     registration_id = fields.Many2one("skts.registration")
 
@@ -14,6 +14,19 @@ class RegistrationContact(models.Model):
     type = fields.Char(required=True)
     name = fields.Char()
     phone = fields.Char(required=True)
+
+    action_html = fields.Html(compute="_compute_action_html")
+
+    @api.depends("phone")
+    def _compute_action_html(self):
+        for record in self:
+            if record.phone:
+                tel = f'<a href="tel:{record.phone}" class="fa fa-phone fa-lg" title="TEL: {record.type}"/>'
+                sms = f'<a href="sms:{record.phone}" class="fa fa-sms fa-lg" style="padding-left: 14px;" title="SMS: {record.type}"/>'
+                whatsapp = f'<a href="https://wa.me/{record.phone}" class="fab fa-whatsapp fa-lg" style="padding-left: 14px;" title="WP: {record.type}"/>'
+                record.action_html = tel + sms + whatsapp
+            else:
+                record.action_html = ''
 
 
 class Registration(models.Model):
@@ -64,10 +77,12 @@ class Registration(models.Model):
         for record in self:
             html = ""
             count = 0
-            for contact_id in record.contact_ids:
+            sorted_contact_ids = record.contact_ids.sorted("sequence", reverse=True)  # Butonlar sağdan sola oluştuğu için ters sıralanıyor
+            for contact_id in sorted_contact_ids:
                 padding_right = "padding-right: 20px;" if count > 0 else "padding-right: 5px;"
+                icon = "fa fa-phone" if count > 0 else "far fa-phone"
                 # TODO: html'i parametre yap
-                html += f'<a href="tel:{contact_id.phone}" target="_self" style="transform: scale(1.4);{padding_right}" class="oe_kanban_action oe_kanban_action_a float-end"> <span class="fa fa-phone" role="img" aria-label="Call {contact_id.type}" title="Call {contact_id.type}"> </span> </a>'
+                html += f'<a href="tel:{contact_id.phone}" target="_self" style="{padding_right}" class="{icon} fa-lg oe_kanban_action oe_kanban_action_a float-end" title="TEL: {contact_id.type}"/>'
                 count += 1
             record.contact_html = html
 
