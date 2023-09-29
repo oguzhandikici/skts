@@ -42,12 +42,28 @@
                     <field name="state" widget="statusbar" statusbar_visible="awaiting_registration,registered"/>
                 </header>
                 <sheet>
+
                     <div class="oe_title">
                         <h1 class="d-flex flex-row">
                             <field name="name" placeholder="Type the person name here..."
-                                   style="font-size: min(4vw, 2.6rem); width: 150%;"/>
+                                   style="font-size: min(4vw, 2.6rem);"/>
                         </h1>
                     </div>
+
+
+                    <!--                    <div class="oe_button_box" name="button_box"-->
+                    <!--                         attrs="{'invisible':['|',('state','!=','registered'),('id','=',False)]}">-->
+                    <!--                        <button class="oe_stat_button"-->
+                    <!--                                name="%(skts_payment_action)d"-->
+                    <!--                                groups="skts.group_skts_manager"-->
+                    <!--                                type="action" icon="fa-lira-sign">-->
+                    <!--                            <div class="o_field_widget o_stat_info">-->
+                    <!--                                <span class="o_stat_text">Add</span>-->
+                    <!--                                <span class="o_stat_text">Context Action</span>-->
+                    <!--                            </div>-->
+                    <!--                        </button>-->
+                    <!--                    </div>-->
+
 
                     <group>
 
@@ -62,15 +78,26 @@
                             <field name="note"/>
 
                             <field name="contact_ids">
-                                <tree editable="bottom" no_open="1" default_order="sequence">
+                                <tree default_order="sequence">
                                     <control>
                                         <create string="Add a Contact"/>
                                     </control>
 
-                                    <field name="sequence" widget="handle"/>
+                                    <field name="invisible_up" invisible="1"/>
+                                    <field name="invisible_down" invisible="1"/>
+                                    <field name="sequence" invisible="1"/>
+                                    <button name="change_sequence_mobile" type="object"
+                                            class="fas fa-caret-up btn-secondary oe_edit_only" string=""
+                                            context="{'type': 'up'}"
+                                            attrs="{'invisible':['|',('invisible_up','=',True),('id','=',False)]}"
+                                            title="Up"/>
+                                    <button name="change_sequence_mobile" type="object"
+                                            class="fas fa-caret-down btn-secondary oe_edit_only" string=""
+                                            context="{'type': 'down'}" title="Down"
+                                            attrs="{'invisible':['|',('invisible_down','=',True),('id','=',False)]}"/>
+
                                     <field name="type"/>
                                     <field name="name"/>
-                                    <field name="phone"/>
                                     <field name="action_html" widget="html" nolabel="1"/>
 
                                 </tree>
@@ -79,9 +106,10 @@
 
 
                         <group string="Registration Information">
-                            <field name="place_id" options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True, 'no_create': True}"/>
+                            <field name="place_id" widget="selection"
+                                   options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True, 'no_create': True}"/>
 
-                            <field name="type_id"
+                            <field name="type_id" widget="selection"
                                    domain="[('place_id', '=', place_id)]"
                                    attrs="{'invisible':[('place_id','=',False)]}"
                                    force_save="1"
@@ -98,50 +126,109 @@
                                     <field name="date_end"/>
                                 </tree>
                             </field>
-                            <field name="morning_driver_id"
-                                   options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True, 'no_create': True}"
-                                   attrs="{
-                            'invisible':[('state','not in',['registered'])],
-                            'readonly':[('state','not in',['registered'])]
-                            }"/>
-                            <field name="morning_hour" widget="float_time"
-                                   attrs="{
-                            'invisible':[('state','not in',['registered'])],
-                            'readonly':[('state','not in',['registered'])]
-                            }"/>
-                            <field name="morning_sequence"
-                                   attrs="{
-                            'invisible':[('state','not in',['registered'])],
-                            'readonly':[('state','not in',['registered'])]
-                            }"/>
-                            <field name="evening_driver_id"
-                                   options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True, 'no_create': True}"
-                                   attrs="{
-                            'invisible':[('state','not in',['registered'])],
-                            'readonly':[('state','not in',['registered'])]
-                            }"/>
-                            <field name="evening_hour" widget="float_time"
-                                   attrs="{
-                            'invisible':[('state','not in',['registered'])],
-                            'readonly':[('state','not in',['registered'])]
-                            }"/>
-                            <field name="evening_sequence"
-                                   attrs="{
-                            'invisible':[('state','not in',['registered'])],
-                            'readonly':[('state','not in',['registered'])]
-                            }"/>
 
 
                         </group>
                     </group>
+                    <notebook attrs="{'invisible':['|',('state','!=','registered'),('id','=',False)]}">
+                        <page name="driver_page" string="Drivers">
+                            <group>
+                                <group attrs="{'invisible':[('state','not in',['registered'])]}">
+                                    <field name="morning_driver_id"
+                                           options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True, 'no_create': True}"/>
+                                    <field name="morning_hour" widget="float_time"/>
+                                    <field name="morning_sequence"/>
+                                </group>
+
+
+                                <group attrs="{'invisible':[('state','not in',['registered'])]}">
+                                    <field name="evening_driver_id"
+                                           options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True, 'no_create': True}"/>
+                                    <field name="evening_hour" widget="float_time"/>
+                                    <field name="evening_sequence"/>
+                                </group>
+
+
+                            </group>
+                        </page>
+
+                        <page string="₺ Payments" name="payment_page">
+                            <field name="payment_ids" nolabel="1" colspan="2"/>
+                        </page>
+
+                    </notebook>
 
                 </sheet>
             </form>
         </field>
     </record>
 
-    <record model="ir.ui.view" id="skts_registration_view_filter">
-        <field name="name">skts.registration.filter</field>
+
+    <record id="skts_registration_kanban_view" model="ir.ui.view">
+        <field name="name">skts.registration.evening.kanban</field>
+        <field name="model">skts.registration</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" group_create="0" group_delete="0"
+                    group_edit="0" archivable="0" quick_create="0">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="place_term_ids"/>
+                <field name="type_id"/>
+                <field name="place_id"/>
+                <field name="full_address"/>
+                <field name="contact_html" widget="html"/>
+
+                <templates>
+                    <t t-name="kanban-box">
+
+                        <div class="oe_kanban_global_click">
+                            <div>
+                                <h4>
+                                    <field name="name"/>
+                                </h4>
+                                <div class="mb-1">
+                                    <em>
+                                        -
+                                        <field name="note"/>
+                                    </em>
+                                </div>
+                                <a t-attf-href="https://maps.google.com/maps?q={{record.full_address.raw_value}}"
+                                   target="_blank"
+                                   class="fa fa-map-marker oe_kanban_action oe_kanban_action_a float-start ml-1 mt-1">
+                                </a>
+                                <a t-attf-href="https://maps.google.com/maps?q={{record.full_address.raw_value}}"
+                                   target="_blank" style="padding-left: 3px;"
+                                   class="oe_kanban_action oe_kanban_action_a">
+                                    <field name="full_address"/>
+
+                                </a>
+                                <div class="o_kanban_record_bottom mt-3">
+
+                                    <!--                                    <div style="text-align: right;">-->
+                                    <!--                                        <u>-->
+                                    <!--                                            <small class="text-muted">Aksiyonlar</small>-->
+                                    <!--                                        </u>-->
+                                    <!--                                    </div>-->
+
+                                    <div class="oe_kanban_bottom_left" style="padding-left: 3px;"/>
+
+
+                                    <div class="oe_kanban_bottom_right float-end pe-auto">
+
+                                        <field name="contact_html" widget="html"/>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="skts_registration_view_search">
+        <field name="name">skts.registration.search</field>
         <field name="model">skts.registration</field>
         <field name="arch" type="xml">
             <search>
@@ -151,34 +238,66 @@
                        ('name','ilike',self),
                        ]"/>
 
-                <group string="Admin Filters" groups="skts.group_skts_manager">
+                <group string="Admin Filters" groups="base.group_system">
                     <filter name="filter_show_passives_too" string="Show Passive Records Also"
                             domain="[('active','in',[True,False])]"/>
+                    <filter name="filter_registered" string="Registered"
+                            domain="[('state','=','registered')]"/>
+                    <filter name="filter_awaiting_registration" string="Awaiting Registration"
+                            domain="[('state','=','awaiting_registration')]"/>
                 </group>
                 <separator/>
 
                 <group string="Group By">
                     <filter name="group_place" string="Place" context="{'group_by':'place_id'}"/>
                     <filter name="group_state" string="State" context="{'group_by':'state'}"/>
+                    <filter name="group_morning_driver" string="Morning Driver" context="{'group_by':'morning_driver_id'}"/>
+                    <filter name="group_evening_driver" string="Evening Driver" context="{'group_by':'evening_driver_id'}"/>
                 </group>
             </search>
         </field>
     </record>
 
-    <record model="ir.actions.act_window" id="skts_registration_action">
-        <field name="name">Registrations</field>
+
+    <record model="ir.actions.act_window" id="skts_registration_awaiting_registration_action">
+        <field name="name">Awaiting Registration List</field>
         <field name="res_model">skts.registration</field>
         <field name="view_mode">tree,form</field>
+        <field name="domain">[('state', '=', 'awaiting_registration')]</field>
         <field name="context">{
-            'search_default_group_place': 1,
+            'group_by': ['place_id']
+            }
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="skts_registration_final_list_action">
+        <field name="name">Final List</field>
+        <field name="res_model">skts.registration</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="domain">[('state', '=', 'registered')]</field>
+        <field name="context">{
+            'group_by': ['place_id']
             }
         </field>
     </record>
 
     <menuitem id="skts_registration_menu"
-              name="Registration"
-              action="skts_registration_action"
+              name="Registrations"
               sequence="45"
               parent="skts_root_menu"/>
+
+
+    <menuitem id="skts_registration_awaiting_registration_menu"
+              name="Awaiting Registration List"
+              action="skts_registration_awaiting_registration_action"
+              sequence="15"
+              parent="skts_registration_menu"/>
+
+    <menuitem id="skts_registration_final_list_menu"
+              name="Final List"
+              action="skts_registration_final_list_action"
+              sequence="20"
+              parent="skts_registration_menu"/>
+
 
 </odoo>

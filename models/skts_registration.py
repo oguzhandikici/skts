@@ -10,12 +10,38 @@ class RegistrationContact(models.Model):
 
     registration_id = fields.Many2one("skts.registration")
 
-    sequence = fields.Integer()
+    sequence = fields.Integer(default=1)
     type = fields.Char(required=True)
     name = fields.Char()
     phone = fields.Char(required=True)
 
     action_html = fields.Html(compute="_compute_action_html")
+    invisible_down = fields.Boolean(compute="_compute_invisible_up_down")
+    invisible_up = fields.Boolean(compute="_compute_invisible_up_down")
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for value in vals_list:
+            new_sequence = len(self.env['skts.registration'].browse([value['registration_id']]).contact_ids)
+            value['sequence'] = new_sequence
+        return super().create(vals_list)
+
+    @api.depends("invisible_down", "invisible_up")
+    def _compute_invisible_up_down(self):
+        for record in self:
+            invisible_up, invisible_down = True, True
+            contact_ids = record.registration_id.contact_ids.sorted('sequence')
+            if len(contact_ids) > 1:
+                if contact_ids[0].sequence < record.sequence < contact_ids[-1].sequence:
+                    invisible_up, invisible_down = False, False
+                elif record == contact_ids[-1]:
+                    invisible_up, invisible_down = False, True
+                elif record == contact_ids[0]:
+                    invisible_up, invisible_down = True, False
+            else:
+                invisible_up, invisible_down = True, True
+
+            record.invisible_up, record.invisible_down = invisible_up, invisible_down
 
     @api.depends("phone")
     def _compute_action_html(self):
@@ -27,6 +53,22 @@ class RegistrationContact(models.Model):
                 record.action_html = tel + sms + whatsapp
             else:
                 record.action_html = ''
+
+    def change_sequence_mobile(self):
+        type = self.env.context.get('type')
+        sequence = getattr(self, 'sequence')
+
+        if type == 'down':
+            records = self.registration_id.contact_ids.filtered(lambda r: r.sequence in [sequence, sequence+1])
+
+            self.sequence = sequence + 1
+            records[1].sequence = sequence
+
+        elif type == 'up':
+            records = self.registration_id.contact_ids.filtered(lambda r: r.sequence in [sequence, sequence-1])
+
+            self.sequence = self.sequence - 1
+            records[0].sequence = sequence
 
 
 class Registration(models.Model):
@@ -59,10 +101,12 @@ class Registration(models.Model):
 
     morning_driver_id = fields.Many2one("skts.driver")
     morning_hour = fields.Float()
-    morning_sequence = fields.Integer()
+    morning_sequence = fields.Integer(default=10)
     evening_driver_id = fields.Many2one("skts.driver")
     evening_hour = fields.Float()
-    evening_sequence = fields.Integer()
+    evening_sequence = fields.Integer(default=10)
+
+    payment_ids = fields.One2many("skts.payment", "registration_id", string="Payments")
 
     @api.depends("full_address")
     def _compute_full_address(self):
@@ -77,11 +121,11 @@ class Registration(models.Model):
         for record in self:
             html = ""
             count = 0
+            limit = len(record.contact_ids)-1
             sorted_contact_ids = record.contact_ids.sorted("sequence", reverse=True)  # Butonlar sağdan sola oluştuğu için ters sıralanıyor
             for contact_id in sorted_contact_ids:
                 padding_right = "padding-right: 20px;" if count > 0 else "padding-right: 5px;"
-                icon = "fa fa-phone" if count > 0 else "far fa-phone"
-                # TODO: html'i parametre yap
+                icon = "far fa-phone" if count < limit else "fa fa-phone"
                 html += f'<a href="tel:{contact_id.phone}" target="_self" style="{padding_right}" class="{icon} fa-lg oe_kanban_action oe_kanban_action_a float-end" title="TEL: {contact_id.type}"/>'
                 count += 1
             record.contact_html = html

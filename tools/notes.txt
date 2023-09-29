@@ -8,8 +8,9 @@ web_responsive\static\src\legacy\scss\web_responsive.scss
 .o_form_sheet 75%
 
 
-
-
+Field çizgilerini her zaman görünür kılmak:
+    >>> C:\Users\tai\SoftwareProjects\odoo16\addons\web\static\src\views\form\form_controller.scss
+        içindeki ".o_input:not(:hover):not(:focus)" altındaki "--o-input-border-color: transparent;" silinecek
 
 
 

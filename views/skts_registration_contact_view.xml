@@ -1,0 +1,22 @@
+<odoo>
+
+    <record model="ir.ui.view" id="skts_registration_contact_view_form">
+        <field name="name">skts.registration.contact.form</field>
+        <field name="model">skts.registration.contact</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="type"/>
+                        <field name="name"/>
+                        <field name="phone"/>
+
+                        <field name="sequence" attrs="{'invisible':[('id','=',False)]}"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+</odoo>

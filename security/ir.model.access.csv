@@ -2,6 +2,8 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 
 access_skts_registration_manager,skts_registration_manager,model_skts_registration,group_skts_manager,1,1,1,1
 
+access_skts_payment_manager,skts_payment_manager,model_skts_payment,group_skts_manager,1,1,1,1
+
 access_skts_driver_manager,skts_driver_manager,model_skts_driver,group_skts_manager,1,1,1,1
 
 access_skts_place_manager,skts_place_manager,model_skts_place,group_skts_manager,1,1,1,1
