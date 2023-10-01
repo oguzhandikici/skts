@@ -22,11 +22,11 @@
                             <div>
                                 <h4>
                                     <field name="name"/>
-                                    <small class="text-muted" t-if="record.morning_hour!=false">
-                                        ━━ (<field name="morning_hour" widget="float_time"/>)
+                                    <small class="text-muted" t-if="record.morning_hour.raw_value!=false">
+                                        ━ (<field name="morning_hour" widget="float_time"/>)
                                     </small>
                                 </h4>
-                                <div class="mb-1">
+                                <div class="mb-1" t-if="record.note.raw_value!=false">
                                     <em>
                                         -
                                         <field name="note"/>
@@ -90,11 +90,11 @@
                             <div>
                                 <h4>
                                     <field name="name"/>
-                                    <small class="text-muted" t-if="record.evening_hour!=false">
+                                    <small class="text-muted" t-if="record.evening_hour.raw_value!=false">
                                         ━━ (<field name="evening_hour" widget="float_time"/>)
                                     </small>
                                 </h4>
-                                <div class="mb-1">
+                                <div class="mb-1" t-if="record.note.raw_value!=false">
                                     <em>
                                         -
                                         <field name="note"/>

@@ -15,6 +15,7 @@ class Payment(models.Model):
     type = fields.Selection([
         ('iban', 'IBAN'),
         ('cash', 'Cash'),
+        ('other', 'Other'),
     ], string="Payment Type")
 
     sequence = fields.Integer(default=1, string="Payment Order")
@@ -36,7 +37,7 @@ class Payment(models.Model):
                 record.display_name = f"<b>{record.name} / ₺{record.price} {is_paid}</b>"
 
             else:
-                record.display_name = ""
+                record.display_name = '<b><font color="pink">Kaydet tuşuna basın</font></b>'
 
     @api.model_create_multi
     def create(self, vals_list):

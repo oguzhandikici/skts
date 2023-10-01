@@ -3,16 +3,18 @@
         <field name="name">skts.payment.tree</field>
         <field name="model">skts.payment</field>
         <field name="arch" type="xml">
-            <tree editable="top"
-                  decoration-warning="date==False" decoration-bf="id!=False"
-                  decoration-success="date!=False"
-            >
+            <tree decoration-warning="date==False" decoration-bf="id!=False" decoration-success="date!=False">
+                <control>
+                    <create string="Add a Payment"/>
+                </control>
                 <field name="sequence" widget="handle"/>
                 <field name="price"/>
 
                 <field name="name"/>
-                <field name="type"/>
                 <field name="date"/>
+
+                <field name="type" attrs="{'readonly':[('date','=',False)]}"/>
+
             </tree>
         </field>
     </record>
@@ -27,8 +29,8 @@
                     <group>
                         <field name="price"/>
                         <field name="name"/>
-                        <field name="type"/>
                         <field name="date"/>
+                        <field name="type" attrs="{'invisible':[('date','=',False)], 'readonly':[('date','=',False)], 'required':[('date','!=',False)]}"/>
 
                         <field name="sequence" attrs="{'invisible':[('id','=',False)]}"/>
                     </group>

@@ -1,6 +1,6 @@
 <odoo>
 
-    <menuitem name="Servis Kayıt ve Takip" id="skts_root_menu"/>
+    <menuitem name="Servis Kayıt ve Takip" id="skts_root_menu" web_icon="skts,static/description/icon.png" action="skts_registration_final_list_action"/>
 
     <menuitem name="Configuration" id="skts_configuration_menu" parent="skts_root_menu" sequence="90"/>
 

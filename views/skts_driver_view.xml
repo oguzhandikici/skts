@@ -7,6 +7,7 @@
                 <field name="name"/>
                 <field name="user_id"/>
                 <field name="number"/>
+                <field name="seats"/>
                 <field name="can_see_driver_numbers"/>
                 <field name="iban"/>
             </tree>
@@ -24,6 +25,7 @@
                             <field name="name"/>
                             <field name="user_id"/>
                             <field name="number"/>
+                            <field name="seats"/>
                             <field name="can_see_driver_numbers"/>
                             <field name="iban"/>
                         </group>

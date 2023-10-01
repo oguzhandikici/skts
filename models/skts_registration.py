@@ -99,14 +99,22 @@ class Registration(models.Model):
     place_term_ids = fields.Many2many("skts.place.term", "skts_registration_place_term_rel", required=True,
                                        string="Terms", domain="[('place_id', '=', place_id), ('open_to_register', '=', True)]")
 
-    morning_driver_id = fields.Many2one("skts.driver")
+    morning_driver_id = fields.Many2one("skts.driver", group_expand="_group_expand_drivers")
     morning_hour = fields.Float()
     morning_sequence = fields.Integer(default=10)
-    evening_driver_id = fields.Many2one("skts.driver")
+
+    evening_driver_id = fields.Many2one("skts.driver", group_expand="_group_expand_drivers")
     evening_hour = fields.Float()
     evening_sequence = fields.Integer(default=10)
 
     payment_ids = fields.One2many("skts.payment", "registration_id", string="Payments")
+
+    @api.model
+    def _group_expand_drivers(self, stages, domain, order):
+        if not self.env.context.get("mylist_view"):
+            return self.env['skts.driver'].search([], order=order)
+        else:
+            return self.env['skts.driver'].search([('user_id', '=', self.env.user.id)], order=order)
 
     @api.depends("full_address")
     def _compute_full_address(self):

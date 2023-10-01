@@ -165,11 +165,11 @@
 
 
     <record id="skts_registration_kanban_view" model="ir.ui.view">
-        <field name="name">skts.registration.evening.kanban</field>
+        <field name="name">skts.registration.kanban</field>
         <field name="model">skts.registration</field>
         <field name="arch" type="xml">
             <kanban class="o_kanban_mobile" group_create="0" group_delete="0"
-                    group_edit="0" archivable="0" quick_create="0">
+                    archivable="0" quick_create="0">
                 <field name="id"/>
                 <field name="name"/>
                 <field name="place_term_ids"/>
@@ -177,6 +177,7 @@
                 <field name="place_id"/>
                 <field name="full_address"/>
                 <field name="contact_html" widget="html"/>
+                <progressbar field="morning_seat_state" colors='{"full": "success", "exceeded": "danger", "below_half": "warning", "above_half": "info", "empty": "muted"}'/>
 
                 <templates>
                     <t t-name="kanban-box">
@@ -186,7 +187,7 @@
                                 <h4>
                                     <field name="name"/>
                                 </h4>
-                                <div class="mb-1">
+                                <div class="mb-1" t-if="record.note.raw_value!=false">
                                     <em>
                                         -
                                         <field name="note"/>
@@ -276,7 +277,8 @@
         <field name="view_mode">tree,kanban,form</field>
         <field name="domain">[('state', '=', 'registered')]</field>
         <field name="context">{
-            'group_by': ['place_id']
+            'group_by': ['place_id'],
+            'kanban_view_ref': 'skts.skts_registration_kanban_view',
             }
         </field>
     </record>
@@ -296,7 +298,7 @@
     <menuitem id="skts_registration_final_list_menu"
               name="Final List"
               action="skts_registration_final_list_action"
-              sequence="20"
+              sequence="10"
               parent="skts_registration_menu"/>
 
 
