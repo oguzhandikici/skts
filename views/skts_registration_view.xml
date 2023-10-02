@@ -177,7 +177,8 @@
                 <field name="place_id"/>
                 <field name="full_address"/>
                 <field name="contact_html" widget="html"/>
-                <progressbar field="morning_seat_state" colors='{"full": "success", "exceeded": "danger", "below_half": "warning", "above_half": "info", "empty": "muted"}'/>
+                <field name="evening_seat_state"/>
+                <progressbar field="evening_seat_state" colors='{"within_seat_limit": "success", "above_seat_limit": "danger"}'/>
 
                 <templates>
                     <t t-name="kanban-box">
@@ -283,6 +284,17 @@
         </field>
     </record>
 
+        <record model="ir.actions.act_window" id="skts_registration_full_list_action">
+        <field name="name">Full List</field>
+        <field name="res_model">skts.registration</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="context">{
+            'kanban_view_ref': 'skts.skts_registration_kanban_view',
+            }
+        </field>
+    </record>
+
+
     <menuitem id="skts_registration_menu"
               name="Registrations"
               sequence="45"
@@ -300,6 +312,15 @@
               action="skts_registration_final_list_action"
               sequence="10"
               parent="skts_registration_menu"/>
+
+        <menuitem id="skts_registration_full_list_menu"
+              name="Full List"
+              action="skts_registration_full_list_action"
+              sequence="90"
+              parent="skts_registration_menu"
+              groups="base.group_system"
+        />
+
 
 
 </odoo>
