@@ -1,0 +1,17 @@
+<odoo>
+    <record model="ir.ui.view" id="skts_route_view_tree">
+        <field name="name">skts.registration.tree Driver Route</field>
+        <field name="model">skts.registration</field>
+        <field name="arch" type="xml">
+            <tree expand="1" duplicate="0" create="0" editable="bottom">
+                <field name="morning_driver_id"/>
+                <field name="morning_sequence"/>
+                <field name="morning_hour"/>
+                <field name="name" readonly="1"/>
+                <field name="place_term_ids" widget="many2many_tags" readonly="1"/>
+                <field name="type_id" readonly="1"/>
+            </tree>
+        </field>
+    </record>
+
+</odoo>

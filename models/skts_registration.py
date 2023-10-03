@@ -102,7 +102,6 @@ class Registration(models.Model):
     morning_driver_id = fields.Many2one("skts.driver", group_expand="_group_expand_drivers")
     morning_hour = fields.Float()
     morning_sequence = fields.Integer(default=1)
-    morning_seat_limit = fields.Integer(related="morning_driver_id.seats")
     morning_seat_state = fields.Selection([
         ('within_seat_limit', 'Within Seat Limit'),
         ('above_seat_limit', 'Above Seat Limit'),
@@ -111,66 +110,45 @@ class Registration(models.Model):
     evening_driver_id = fields.Many2one("skts.driver", group_expand="_group_expand_drivers")
     evening_hour = fields.Float()
     evening_sequence = fields.Integer(default=1)
-    evening_seat_limit = fields.Integer(related="evening_driver_id.seats")
     evening_seat_state = fields.Selection([
         ('within_seat_limit', 'Within Seat Limit'),
         ('above_seat_limit', 'Above Seat Limit'),
-    ], compute="_compute_evening_seat_state", store=True)
+    ], compute="_compute_evening_seat_state")
 
     payment_ids = fields.One2many("skts.payment", "registration_id", string="Payments")
 
     @api.depends("evening_sequence", "evening_driver_id.seats", "evening_driver_id")
     def _compute_evening_seat_state(self):
+        counts = {record.evening_driver_id.id: 1 for record in self}  # for kanban
         for record in self:
             seat_limit = record.evening_driver_id.seats
-            seats_full = len(record.evening_driver_id.evening_registration_ids.filtered(lambda r: r.id == record.id))
-            print(seat_limit)
-            print(seats_full)
-            if seats_full <= seat_limit:
+            driver_seat_count = counts[record.evening_driver_id.id]
+            if driver_seat_count <= seat_limit:
                 record.evening_seat_state = 'within_seat_limit'
-            elif seats_full > seat_limit:
+            elif driver_seat_count > seat_limit:
                 record.evening_seat_state = 'above_seat_limit'
+
+            driver_seat_count += 1
 
     @api.depends("morning_sequence", "morning_driver_id.seats", "morning_driver_id")
     def _compute_morning_seat_state(self):
+        counts = {record.morning_driver_id.id: 1 for record in self}  # for kanban
         for record in self:
             seat_limit = record.morning_driver_id.seats
-            seats_full = len(record.morning_driver_id.morning_registration_ids.filtered(lambda r: r.id == record.id))
-            if seats_full <= seat_limit:
+            driver_seat_count = counts[record.morning_driver_id.id]
+            if driver_seat_count <= seat_limit:
                 record.morning_seat_state = 'within_seat_limit'
-            elif seats_full > seat_limit:
+            elif driver_seat_count > seat_limit:
                 record.morning_seat_state = 'above_seat_limit'
 
-    #
-    # def _search_evening_seat_state(self, operator, value):
-    #     if value == 'above_seat_limit':
-    #         self.env.cr.execute("""
-    #         select r.id
-    #         from skts_registration r
-    #         left join skts_driver d on r.evening_driver_id = d.id
-    #         where r.evening_sequence > d.seats
-    #         """)
-    #         result = self.env.cr.fetchall()
-    #         return [('id', 'in', [r[0] for r in result])]
-    #     elif value == 'within_seat_limit':
-    #         self.env.cr.execute("""
-    #         select r.id
-    #         from skts_registration r
-    #         left join skts_driver d on r.evening_driver_id = d.id
-    #         where r.evening_sequence <= d.seats
-    #         """)
-    #         result = self.env.cr.fetchall()
-    #         return [('id', 'in', [r[0] for r in result])]
-    #
-    #         print('sonuc',result)
-
+            driver_seat_count += 1
 
     @api.model
     def _group_expand_drivers(self, stages, domain, order):
         if not self.env.context.get("mylist_view"):
             return self.env['skts.driver'].search([], order=order)
         else:
-            return self.env['skts.driver'].search([('user_id', '=', self.env.user.id)], order=order)
+            return stages
 
     @api.depends("full_address")
     def _compute_full_address(self):
@@ -179,6 +157,13 @@ class Registration(models.Model):
                 record.full_address = f"{record.neighbourhood}, {record.address}, {record.district}"
             else:
                 record.full_address = ""
+
+    def open_map(self):
+        return {
+            'type': 'ir.actions.act_url',
+            'target': 'new',
+            'url': f'https://maps.google.com/maps?q={self.full_address}',
+        }
 
     @api.depends("contact_ids")
     def _compute_contact_html(self):

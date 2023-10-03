@@ -178,7 +178,10 @@
                 <field name="full_address"/>
                 <field name="contact_html" widget="html"/>
                 <field name="evening_seat_state"/>
-                <progressbar field="evening_seat_state" colors='{"within_seat_limit": "success", "above_seat_limit": "danger"}'/>
+                <progressbar field="evening_seat_state"
+                             colors='{"within_seat_limit": "success", "above_seat_limit": "danger"}'/>
+                <progressbar field="morning_seat_state" invisible="1"
+                             colors='{"within_seat_limit": "success", "above_seat_limit": "danger"}'/>
 
                 <templates>
                     <t t-name="kanban-box">
@@ -253,8 +256,10 @@
                 <group string="Group By">
                     <filter name="group_place" string="Place" context="{'group_by':'place_id'}"/>
                     <filter name="group_state" string="State" context="{'group_by':'state'}"/>
-                    <filter name="group_morning_driver" string="Morning Driver" context="{'group_by':'morning_driver_id'}"/>
-                    <filter name="group_evening_driver" string="Evening Driver" context="{'group_by':'evening_driver_id'}"/>
+                    <filter name="group_morning_driver" string="Morning Driver"
+                            context="{'group_by':'morning_driver_id'}"/>
+                    <filter name="group_evening_driver" string="Evening Driver"
+                            context="{'group_by':'evening_driver_id'}"/>
                 </group>
             </search>
         </field>
@@ -284,7 +289,7 @@
         </field>
     </record>
 
-        <record model="ir.actions.act_window" id="skts_registration_full_list_action">
+    <record model="ir.actions.act_window" id="skts_registration_full_list_action">
         <field name="name">Full List</field>
         <field name="res_model">skts.registration</field>
         <field name="view_mode">tree,kanban,form</field>
@@ -313,14 +318,13 @@
               sequence="10"
               parent="skts_registration_menu"/>
 
-        <menuitem id="skts_registration_full_list_menu"
+    <menuitem id="skts_registration_full_list_menu"
               name="Full List"
               action="skts_registration_full_list_action"
               sequence="90"
               parent="skts_registration_menu"
               groups="base.group_system"
-        />
-
+    />
 
 
 </odoo>
