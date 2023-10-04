@@ -179,9 +179,9 @@
                 <field name="contact_html" widget="html"/>
                 <field name="evening_seat_state"/>
                 <progressbar field="evening_seat_state"
-                             colors='{"within_seat_limit": "success", "above_seat_limit": "danger"}'/>
+                             colors='{"full": "success", "below_seat_limit": "info", "above_seat_limit": "danger"}'/>
                 <progressbar field="morning_seat_state" invisible="1"
-                             colors='{"within_seat_limit": "success", "above_seat_limit": "danger"}'/>
+                             colors='{"full": "success", "below_seat_limit": "info", "above_seat_limit": "danger"}'/>
 
                 <templates>
                     <t t-name="kanban-box">
