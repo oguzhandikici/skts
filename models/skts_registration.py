@@ -101,8 +101,8 @@ class Registration(models.Model):
                                        string="Terms", domain="[('place_id', '=', place_id), ('open_to_register', '=', True)]")
 
     morning_driver_id = fields.Many2one("skts.driver", group_expand="_group_expand_drivers")
-    morning_hour = fields.Float()
-    morning_sequence = fields.Integer(default=1)
+    morning_hour = fields.Float(group_operator=False)
+    morning_sequence = fields.Integer(default=1, group_operator=False)
     morning_seat_state = fields.Selection([
         ('below_seat_limit', 'Below Seat Limit'),
         ('full', 'Full'),
@@ -110,8 +110,8 @@ class Registration(models.Model):
     ], compute="_compute_morning_seat_state")
 
     evening_driver_id = fields.Many2one("skts.driver", group_expand="_group_expand_drivers")
-    evening_hour = fields.Float()
-    evening_sequence = fields.Integer(default=1)
+    evening_hour = fields.Float(group_operator=False)
+    evening_sequence = fields.Integer(default=1, group_operator=False)
     evening_seat_state = fields.Selection([
         ('below_seat_limit', 'Below Seat Limit'),
         ('full', 'Full'),
@@ -123,11 +123,15 @@ class Registration(models.Model):
 
     @api.depends("morning_sequence", "morning_driver_id.seats", "morning_driver_id")
     def _compute_morning_seat_state(self):
-        driver_group = {driver: {'registrations': self.browse([r.id for r in list(registrations)]), 'seat_limit': driver.seats} for driver, registrations in groupby(self, lambda x: x.morning_driver_id)}
+        driver_group = {
+            driver: {
+                'registrations': self.browse([r.id for r in list(registrations)]),
+                'seat_limit': driver.seats
+            } for driver, registrations in groupby(self, lambda x: x.morning_driver_id)
+        }
 
         for driver in driver_group:
             driver_registrations = driver_group[driver]['registrations']
-            print(driver_registrations.filtered(lambda r: r.id == 12))  # TODO: burda
             driver_seats = driver_group[driver]['seat_limit']
             if driver_registrations.__len__() < driver_seats:
                 driver_registrations.morning_seat_state = 'below_seat_limit'
