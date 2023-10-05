@@ -1,3 +1,4 @@
+# noinspection PyStatementEffect
 {
     "name": "Servis Kayıt ve Takip Sistemi",
     "summary": "",
@@ -24,12 +25,15 @@
         # 'security/access_rules.xml',
 
         'views/menu_item_view.xml',
+
         'views/skts_payment_view.xml',
         'views/skts_registration_contact_view.xml',
 
         'views/skts_registration_view.xml',
         'views/skts_registration_my_list_view.xml',
-        'views/skts_route_view.xml',
+
+        'views/skts_morning_route_view.xml',
+        'views/skts_evening_route_view.xml',
 
         'views/skts_place_view.xml',
         'views/skts_place_term_view.xml',

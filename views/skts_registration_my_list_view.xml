@@ -5,7 +5,7 @@
         <field name="model">skts.registration</field>
         <field name="arch" type="xml">
             <kanban class="o_kanban_mobile" default_order="morning_sequence" group_create="0" group_delete="0"
-                    group_edit="0" archivable="0" quick_create="0">
+                    group_edit="0" archivable="0" quick_create="0" create="0">
                 <field name="id"/>
                 <field name="name"/>
                 <field name="place_term_ids"/>

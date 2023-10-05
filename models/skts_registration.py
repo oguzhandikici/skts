@@ -1,6 +1,6 @@
 from odoo import models, fields, api, SUPERUSER_ID, _
 from odoo.exceptions import UserError
-from itertools import groupby
+from odoo.tools.misc import groupby
 import json
 
 
@@ -120,59 +120,55 @@ class Registration(models.Model):
 
     payment_ids = fields.One2many("skts.payment", "registration_id", string="Payments")
 
-
-    @api.depends("morning_sequence", "morning_driver_id.seats", "morning_driver_id")
+    @api.depends("morning_driver_id.seats", "morning_driver_id")
     def _compute_morning_seat_state(self):
         driver_group = {
             driver: {
-                'registrations': self.browse([r.id for r in list(registrations)]),
+                'registrations': list(registrations),
                 'seat_limit': driver.seats
             } for driver, registrations in groupby(self, lambda x: x.morning_driver_id)
         }
-
         for driver in driver_group:
             driver_registrations = driver_group[driver]['registrations']
             driver_seats = driver_group[driver]['seat_limit']
-            if driver_registrations.__len__() < driver_seats:
-                driver_registrations.morning_seat_state = 'below_seat_limit'
-            elif driver_registrations.__len__() == driver_seats:
-                driver_registrations.morning_seat_state = 'full'
-            elif driver_registrations.__len__() > driver_seats:
-                driver_registrations[0:driver_seats].morning_seat_state = 'full'
-                driver_registrations[driver_seats:].morning_seat_state = 'above_seat_limit'
+            full_seats = len(driver_registrations)
 
-        # counts = {r.morning_driver_id.id: {'count': 1, 'records': []} for r in self}  # for kanban
-        # for record in self:
-        #     seat_limit = record.morning_driver_id.seats
-        #     driver_seat_count = counts[record.morning_driver_id.id]['count']
-        #     if driver_seat_count < seat_limit:
-        #         counts[record.morning_driver_id.id]['records'].append(record)
-        #         record.morning_seat_state = 'below_seat_limit'
-        #     elif driver_seat_count == seat_limit:
-        #         for r in counts[record.morning_driver_id.id]['records']:
-        #             r.morning_seat_state = 'full'
-        #         record.morning_seat_state = 'full'
-        #     elif driver_seat_count > seat_limit:
-        #         record.morning_seat_state = 'above_seat_limit'
-        #     counts[record.morning_driver_id.id]['count'] = driver_seat_count + 1
+            if full_seats > driver_seats:
+                for r in driver_registrations[0:driver_seats]:
+                    r.morning_seat_state = 'full'
+                for r in driver_registrations[driver_seats:]:
+                    r.morning_seat_state = 'above_seat_limit'
+            elif full_seats < driver_seats:
+                for r in driver_registrations:
+                    r.morning_seat_state = 'below_seat_limit'
+            elif full_seats == driver_seats:
+                for r in driver_registrations:
+                    r.morning_seat_state = 'full'
 
-    @api.depends("evening_sequence", "evening_driver_id.seats", "evening_driver_id")
+    @api.depends("evening_driver_id.seats", "evening_driver_id")
     def _compute_evening_seat_state(self):
+        driver_group = {
+            driver: {
+                'registrations': list(registrations),
+                'seat_limit': driver.seats
+            } for driver, registrations in groupby(self, lambda x: x.evening_driver_id)
+        }
+        for driver in driver_group:
+            driver_registrations = driver_group[driver]['registrations']
+            driver_seats = driver_group[driver]['seat_limit']
+            full_seats = len(driver_registrations)
 
-        counts = {r.evening_driver_id.id: {'count': 1, 'records': []} for r in self}  # for kanban
-        for record in self:
-            seat_limit = record.evening_driver_id.seats
-            driver_seat_count = counts[record.evening_driver_id.id]['count']
-            if driver_seat_count < seat_limit:
-                counts[record.evening_driver_id.id]['records'].append(record)
-                record.evening_seat_state = 'below_seat_limit'
-            elif driver_seat_count == seat_limit:
-                for r in counts[record.evening_driver_id.id]['records']:
+            if full_seats > driver_seats:
+                for r in driver_registrations[0:driver_seats]:
                     r.evening_seat_state = 'full'
-                record.evening_seat_state = 'full'
-            elif driver_seat_count > seat_limit:
-                record.evening_seat_state = 'above_seat_limit'
-            counts[record.evening_driver_id.id]['count'] = driver_seat_count + 1
+                for r in driver_registrations[driver_seats:]:
+                    r.evening_seat_state = 'above_seat_limit'
+            elif full_seats < driver_seats:
+                for r in driver_registrations:
+                    r.evening_seat_state = 'below_seat_limit'
+            elif full_seats == driver_seats:
+                for r in driver_registrations:
+                    r.evening_seat_state = 'full'
 
     @api.model
     def _group_expand_drivers(self, stages, domain, order):

@@ -55,7 +55,7 @@
                     <!--                         attrs="{'invisible':['|',('state','!=','registered'),('id','=',False)]}">-->
                     <!--                        <button class="oe_stat_button"-->
                     <!--                                name="%(skts_payment_action)d"-->
-                    <!--                                groups="skts.group_skts_manager"-->
+                    <!--                                groups="skts.group_manager"-->
                     <!--                                type="action" icon="fa-lira-sign">-->
                     <!--                            <div class="o_field_widget o_stat_info">-->
                     <!--                                <span class="o_stat_text">Add</span>-->
@@ -168,8 +168,8 @@
         <field name="name">skts.registration.kanban</field>
         <field name="model">skts.registration</field>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_mobile" group_create="0" group_delete="0"
-                    archivable="0" quick_create="0">
+            <kanban class="o_kanban_mobile" group_create="0" group_delete="0" group_edit="0"
+                    archivable="0" quick_create="0" create="0">
                 <field name="id"/>
                 <field name="name"/>
                 <field name="place_term_ids"/>
@@ -177,11 +177,6 @@
                 <field name="place_id"/>
                 <field name="full_address"/>
                 <field name="contact_html" widget="html"/>
-                <field name="evening_seat_state"/>
-                <progressbar field="evening_seat_state"
-                             colors='{"full": "success", "below_seat_limit": "info", "above_seat_limit": "danger"}'/>
-                <progressbar field="morning_seat_state" invisible="1"
-                             colors='{"full": "success", "below_seat_limit": "info", "above_seat_limit": "danger"}'/>
 
                 <templates>
                     <t t-name="kanban-box">
@@ -300,29 +295,29 @@
     </record>
 
 
-    <menuitem id="skts_registration_menu"
-              name="Registrations"
+    <menuitem id="skts_lists_menu"
+              name="Lists"
               sequence="45"
               parent="skts_root_menu"/>
 
 
     <menuitem id="skts_registration_awaiting_registration_menu"
-              name="Awaiting Registration List"
+              name="Registration List"
               action="skts_registration_awaiting_registration_action"
               sequence="15"
-              parent="skts_registration_menu"/>
+              parent="skts_lists_menu"/>
 
     <menuitem id="skts_registration_final_list_menu"
               name="Final List"
               action="skts_registration_final_list_action"
               sequence="10"
-              parent="skts_registration_menu"/>
+              parent="skts_lists_menu"/>
 
     <menuitem id="skts_registration_full_list_menu"
               name="Full List"
               action="skts_registration_full_list_action"
               sequence="90"
-              parent="skts_registration_menu"
+              parent="skts_lists_menu"
               groups="base.group_system"
     />
 

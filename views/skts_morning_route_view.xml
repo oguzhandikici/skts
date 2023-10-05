@@ -3,7 +3,7 @@
         <field name="name">skts.registration.tree Morning Route</field>
         <field name="model">skts.registration</field>
         <field name="arch" type="xml">
-            <tree expand="1" duplicate="0" create="0" editable="bottom">
+            <tree expand="1" duplicate="0" create="0" editable="bottom" default_order="morning_sequence">
                 <field name="morning_driver_id" options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True, 'no_create': True}"/>
                 <field name="morning_sequence"/>
                 <field name="morning_hour" widget="float_time"/>
@@ -21,7 +21,7 @@
         <field name="model">skts.registration</field>
         <field name="arch" type="xml">
             <kanban class="o_kanban_mobile" default_group_by="morning_driver_id"  default_order="morning_sequence"
-                    archivable="0" group_create="0" group_delete="0" quick_create="0">
+                    archivable="0" group_create="0" group_edit="0" group_delete="0" quick_create="0">
                 <field name="id"/>
                 <field name="name"/>
                 <field name="place_term_ids"/>

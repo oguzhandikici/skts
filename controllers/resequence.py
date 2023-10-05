@@ -2,8 +2,7 @@ from odoo.addons.web.controllers.dataset import DataSet
 from odoo.http import request
 from odoo import http
 
-
-
+# PASSIVE CODE
 class ResequenceEnhanced(DataSet):
 
     @http.route('/web/dataset/resequence', type='json', auth="user")

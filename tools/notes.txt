@@ -1,22 +1,30 @@
-Odoo Default Theme Color:
-addons/web/static/src/scss/primary_variables.scss
-Benim Color: #5b73ab
-Elif Color: #eb6d46
+Odoo Tema Rengi:
+    >>> addons/web/static/src/scss/primary_variables.scss
+        $o-community-color: #5b73ab
 
 Form Width:
-web_responsive\static\src\legacy\scss\web_responsive.scss
-.o_form_sheet 75%
+    >>> web_responsive\static\src\legacy\scss\web_responsive.scss
+        .o_form_sheet 75%
 
 
 Field çizgilerini her zaman görünür kılmak:
     >>> addons\web\static\src\views\form\form_controller.scss
-        içindeki ".o_input:not(:hover):not(:focus)" altındaki "--o-input-border-color: transparent;" silinecek
+        ".o_input:not(:hover):not(:focus)" altındaki
+        "--o-input-border-color: transparent;" silinecek
 
-
-Chrome header rengi ayarlaması:
+Mobil Chrome header rengi ayarlaması:
    >>> addons/web/views/webclient_templates.xml
        içinde <meta name="theme-color" content="#875A7B"/>
 
+
+Mobil form view başlık ayarlaması:
+    >>> addons/web/static/src/views/form/form_controller.scss
+        "o_form_view.o_xxs_form_view" içinde:
+            .o_form_label {
+                font-size: $font-size-base;
+                font-weight: $font-weight-bold;
+                color: $o-black;
+            }
 
 
 

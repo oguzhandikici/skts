@@ -11,6 +11,8 @@ class SKTSDriver(models.Model):
     number = fields.Integer()
     seats = fields.Integer(required=True)
     sequence = fields.Integer(default=1)
+    morning_sequence = fields.Integer(related="sequence", help="To fix kanban column order bug")
+    evening_sequence = fields.Integer(related="sequence", help="To fix kanban column order bug")
 
     can_see_driver_numbers = fields.Char(default="[]", help="ex: [244,231]")
     iban = fields.Text()
