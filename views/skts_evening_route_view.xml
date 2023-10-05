@@ -102,6 +102,8 @@
               action="skts_evening_route_action"
               sequence="20"
               parent="skts_route_menu"
+              groups="skts.group_manager"
+
     />
 
 

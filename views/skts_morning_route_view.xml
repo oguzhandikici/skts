@@ -102,6 +102,7 @@
               action="skts_morning_route_action"
               sequence="10"
               parent="skts_route_menu"
+              groups="skts.group_manager"
     />
 
 
