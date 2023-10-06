@@ -5,13 +5,12 @@
         <field name="arch" type="xml">
             <tree expand="1" duplicate="0"
                   decoration-primary="state=='awaiting_registration'" decoration-bf="state=='awaiting_registration'"
-                  decoration-success="state=='registered'"
                   decoration-muted="state=='cancelled'"
                   decoration-danger="state=='rejected'"
             >
                 <field name="name"/>
                 <field name="place_id"/>
-                <field name="place_term_ids" widget="many2many_tags"/>
+                <field name="place_term_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                 <field name="type_id"/>
                 <field name="state" invisible="1"/>
                 <field name="create_date" widget="date" invisible="context.get('mylist_view')"/>
@@ -78,24 +77,13 @@
                             <field name="note"/>
 
                             <field name="contact_ids">
-                                <tree default_order="sequence">
+                                <tree default_order="sequence" no_open="1">
                                     <control>
                                         <create string="Add a Contact"/>
                                     </control>
 
-                                    <field name="invisible_up" invisible="1"/>
-                                    <field name="invisible_down" invisible="1"/>
-                                    <field name="sequence" invisible="1"/>
-                                    <button name="change_sequence_mobile" type="object"
-                                            class="fas fa-caret-up btn-secondary oe_edit_only" string=""
-                                            context="{'type': 'up'}"
-                                            attrs="{'invisible':['|',('invisible_up','=',True),('id','=',False)]}"
-                                            title="Up"/>
-                                    <button name="change_sequence_mobile" type="object"
-                                            class="fas fa-caret-down btn-secondary oe_edit_only" string=""
-                                            context="{'type': 'down'}" title="Down"
-                                            attrs="{'invisible':['|',('invisible_down','=',True),('id','=',False)]}"/>
-
+                                    <button name="action_get_contact_form" type="object" title="Edit"
+                                            class="fal fa-edit btn btn-secondary oe_edit_only" string=""/>
                                     <field name="type"/>
                                     <field name="name"/>
                                     <field name="action_html" widget="html" nolabel="1"/>
@@ -116,17 +104,7 @@
                                    options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True, 'no_create': True}"/>
                             <field name="place_term_ids"
                                    attrs="{'invisible':[('place_id','=',False)]}"
-                                   context="{'tree_view_ref': 'skts.skts_place_term_registration_view_tree'}">
-                                <tree create="0" no_open="1">
-                                    <control>
-                                        <create string="Add Terms"/>
-                                    </control>
-                                    <field name="name"/>
-                                    <field name="date_start"/>
-                                    <field name="date_end"/>
-                                </tree>
-                            </field>
-
+                                   context="{'tree_view_ref': 'skts.skts_place_term_registration_view_tree', 'form_view_ref': 'skts.skts_place_term_registration_view_form'}"/>
 
                         </group>
                     </group>
@@ -276,7 +254,7 @@
         <field name="name">Final List</field>
         <field name="res_model">skts.registration</field>
         <field name="view_mode">tree,kanban,form</field>
-        <field name="domain">[('state', '=', 'registered')]</field>
+        <field name="domain">[('state', '=', 'registered'), ('place_term_ids.show_in_lists', '=', True)]</field>
         <field name="context">{
             'group_by': ['place_id'],
             'kanban_view_ref': 'skts.skts_registration_kanban_view',

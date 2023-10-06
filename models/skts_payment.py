@@ -19,7 +19,17 @@ class Payment(models.Model):
     ], string="Payment Type")
 
     sequence = fields.Integer(default=1, string="Payment Order")
+    color = fields.Integer('Color Index', compute="_compute_color")
+
     registration_id = fields.Many2one("skts.registration", required=True, ondelete="cascade")
+
+    @api.depends("date")
+    def _compute_color(self):
+        for record in self:
+            if record.date:
+                record.color = 10
+            else:
+                record.color = 2
 
     @api.depends("name", "price")
     def _compute_display_name(self):

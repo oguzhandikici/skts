@@ -29,15 +29,17 @@
         'views/skts_payment_view.xml',
         'views/skts_registration_contact_view.xml',
 
-        'views/skts_registration_view.xml',
-        'views/skts_registration_my_list_view.xml',
-
-        'views/skts_morning_route_view.xml',
-        'views/skts_evening_route_view.xml',
 
         'views/skts_place_view.xml',
         'views/skts_place_term_view.xml',
         'views/skts_driver_view.xml',
+
+
+        'views/skts_morning_route_view.xml',
+        'views/skts_evening_route_view.xml',
+        'views/skts_registration_my_list_view.xml',
+
+        'views/skts_registration_view.xml',
 
     ],
     'assets': {

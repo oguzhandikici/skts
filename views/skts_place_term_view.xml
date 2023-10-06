@@ -10,6 +10,8 @@
                 <field name="date_start"/>
                 <field name="date_end"/>
                 <field name="open_to_register"/>
+                <field name="show_in_lists"/>
+                <field name="color" widget="color_picker"/>
             </tree>
         </field>
     </record>
@@ -19,11 +21,33 @@
         <field name="model">skts.place.term</field>
         <field name="priority">100</field>
         <field name="arch" type="xml">
-            <tree>
+            <tree create="0" edit="0">
+                <control>
+                    <create string="Add Terms"/>
+                </control>
                 <field name="name"/>
                 <field name="date_start"/>
                 <field name="date_end"/>
             </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="skts_place_term_registration_view_form">
+        <field name="name">skts.place.term.registration.form</field>
+        <field name="model">skts.place.term</field>
+        <field name="priority">100</field>
+        <field name="arch" type="xml">
+            <form create="0" edit="0">
+                <sheet>
+                    <group>
+                        <field name="name" readonly="1"/>
+                        <field name="date_start" readonly="1"/>
+                        <field name="date_end" readonly="1"/>
+                    </group>
+                </sheet>
+                <footer/>
+
+            </form>
         </field>
     </record>
 
@@ -35,7 +59,7 @@
     </record>
 
     <menuitem id="skts_place_term_menu"
-              name="Place Terms(DEBUG)"
+              name="Place Terms"
               action="skts_place_term_action"
               sequence="90"
               groups="base.group_no_one"

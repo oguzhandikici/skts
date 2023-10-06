@@ -158,9 +158,8 @@
         <field name="name">My Evening List</field>
         <field name="res_model">skts.registration</field>
         <field name="view_mode">kanban,tree,form</field>
-        <field name="domain">[('evening_driver_id.user_id', '=', uid)]</field>
-        <field name="context">{'create': False, 'delete': False, 'mylist_view': True, 'group_by':
-            ['evening_driver_id']}
+        <field name="domain">[('evening_driver_id.user_id', '=', uid), ('place_term_ids.show_in_lists', '=', True)]</field>
+        <field name="context">{'create': False, 'delete': False, 'mylist_view': True, 'group_by': ['evening_driver_id']}
         </field>
 
     </record>

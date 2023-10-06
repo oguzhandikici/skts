@@ -8,7 +8,7 @@
                 <field name="morning_sequence"/>
                 <field name="morning_hour" widget="float_time"/>
                 <field name="name" readonly="1"/>
-                <field name="place_term_ids" widget="many2many_tags" readonly="1"/>
+                <field name="place_term_ids" widget="many2many_tags" readonly="1" options="{'color_field': 'color'}"/>
                 <field name="type_id" readonly="1"/>
                 <button name="open_map" string="Open Map" type="object" class="btn-secondary"
                         icon="fa-map-marker-alt"/>
@@ -88,7 +88,7 @@
         <field name="name">Morning Route</field>
         <field name="res_model">skts.registration</field>
         <field name="view_mode">tree,kanban,form</field>
-        <field name="domain">[('state', '=', 'registered')]</field>
+        <field name="domain">[('state', '=', 'registered'), ('place_term_ids.show_in_lists', '=', True)]</field>
         <field name="context">{
             'group_by': ['morning_driver_id'],
             'kanban_view_ref': 'skts.skts_morning_route_kanban_view',

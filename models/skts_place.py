@@ -36,6 +36,7 @@ class SKTSPlaceTerm(models.Model):
     date_end = fields.Date(string="End Date", required=True)
 
     open_to_register = fields.Boolean(default=True)
+    show_in_lists = fields.Boolean(default=True)
     active = fields.Boolean(default=True)
 
     registration_ids = fields.Many2many("skts.registration", "skts_registration_term_rel",

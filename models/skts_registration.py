@@ -20,6 +20,15 @@ class RegistrationContact(models.Model):
     invisible_down = fields.Boolean(compute="_compute_invisible_up_down")
     invisible_up = fields.Boolean(compute="_compute_invisible_up_down")
 
+    def action_get_contact_form(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_id': self.id,
+            'res_model': self._name,
+            'target': 'new',
+        }
+
     @api.model_create_multi
     def create(self, vals_list):
         for value in vals_list:
@@ -119,6 +128,7 @@ class Registration(models.Model):
     ], compute="_compute_evening_seat_state")
 
     payment_ids = fields.One2many("skts.payment", "registration_id", string="Payments")
+
 
     @api.depends("morning_driver_id.seats", "morning_driver_id")
     def _compute_morning_seat_state(self):

@@ -12,6 +12,19 @@
                         <field name="phone"/>
 
                         <field name="sequence" attrs="{'invisible':[('id','=',False)]}"/>
+
+                        <field name="invisible_up" invisible="1"/>
+                        <field name="invisible_down" invisible="1"/>
+                        <button name="change_sequence_mobile" type="object"
+                                class="fas fa-caret-up btn-secondary oe_edit_only" string=""
+                                context="{'type': 'up'}"
+                                attrs="{'invisible':['|',('invisible_up','=',True),('id','=',False)]}"
+                                title="Up"/>
+                        <button name="change_sequence_mobile" type="object"
+                                class="fas fa-caret-down btn-secondary oe_edit_only" string=""
+                                context="{'type': 'down'}" title="Down"
+                                attrs="{'invisible':['|',('invisible_down','=',True),('id','=',False)]}"/>
+
                     </group>
                 </sheet>
             </form>
