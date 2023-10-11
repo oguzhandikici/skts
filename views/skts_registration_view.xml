@@ -10,8 +10,8 @@
             >
                 <field name="name"/>
                 <field name="place_id"/>
-                <field name="place_term_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                 <field name="type_id"/>
+                <field name="place_term_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                 <field name="state" invisible="1"/>
                 <field name="create_date" widget="date" invisible="context.get('mylist_view')"/>
                 <field name="write_date" widget="date" invisible="context.get('mylist_view')"/>
@@ -83,7 +83,8 @@
                                     </control>
 
                                     <button name="action_get_contact_form" type="object" title="Edit"
-                                            class="fal fa-edit btn btn-secondary oe_edit_only" string=""/>
+                                            class="btn btn-secondary fal fa-edit oe_edit_only" string=""/>
+                                    <field name="sequence" invisible="1"/>
                                     <field name="type"/>
                                     <field name="name"/>
                                     <field name="action_html" widget="html" nolabel="1"/>

@@ -22,6 +22,7 @@ class RegistrationContact(models.Model):
 
     def action_get_contact_form(self):
         return {
+            'name': _('Contact'),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_id': self.id,
@@ -105,7 +106,7 @@ class Registration(models.Model):
     contact_html = fields.Html(compute="_compute_contact_html")
 
     place_id = fields.Many2one("skts.place", required=True, ondelete="restrict")
-    type_id = fields.Many2one("skts.place.registration.type", string="Registration Type", required=True)
+    type_id = fields.Many2one("skts.place.registration.type", required=True)
     place_term_ids = fields.Many2many("skts.place.term", "skts_registration_place_term_rel", required=True,
                                        string="Terms", domain="[('place_id', '=', place_id), ('open_to_register', '=', True)]")
 

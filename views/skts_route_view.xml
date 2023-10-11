@@ -1,0 +1,236 @@
+<odoo>
+
+    <record model="ir.ui.view" id="skts_route_view_tree">
+        <field name="name">skts.registration.tree Route</field>
+        <field name="model">skts.registration</field>
+        <field name="arch" type="xml">
+            <tree expand="1" duplicate="0" create="0" editable="bottom">
+                <field name="morning_driver_id"
+                       options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True, 'no_create': True}"
+                       string="MD"/>
+                <field name="morning_sequence"
+                       string="MS"/>
+                <field name="morning_hour" widget="float_time"
+                       string="MH"/>
+                <field name="evening_driver_id"
+                       options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True, 'no_create': True}"
+                       string="ED"/>
+                <field name="evening_sequence"
+                       string="ES"/>
+                <field name="evening_hour" widget="float_time"
+                       string="EH"/>
+                <field name="name" readonly="1"/>
+                <field name="type_id" readonly="1"
+                       options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True, 'no_create': True}"/>
+                <field name="place_term_ids" widget="many2many_tags" readonly="1" options="{'color_field': 'color'}"/>
+                <field name="full_address" readonly="1"/>
+                <button name="open_map" string="Open Map" type="object" class="btn-secondary"
+                        icon="fa-map-marker-alt"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="skts_morning_route_kanban_view" model="ir.ui.view">
+        <field name="name">skts.registration.kanban Morning Route</field>
+        <field name="model">skts.registration</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" default_group_by="morning_driver_id" default_order="morning_sequence"
+                    create="0"
+                    archivable="0" group_create="0" group_edit="0" group_delete="0" quick_create="0">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="place_term_ids"/>
+                <field name="type_id"/>
+                <field name="place_id"/>
+                <field name="full_address"/>
+                <field name="contact_html" widget="html"/>
+                <field name="morning_sequence" widget="handle"/>
+                <field name="morning_seat_state"/>
+                <progressbar field="morning_seat_state"
+                             colors='{"full": "success", "below_seat_limit": "info", "above_seat_limit": "danger"}'/>
+
+                <templates>
+                    <t t-name="kanban-box">
+
+                        <div class="oe_kanban_global_click">
+                            <div>
+                                <h4>
+                                    <field name="name"/>
+                                </h4>
+                                <div class="mb-1" t-if="record.note.raw_value!=false">
+                                    <em>
+                                        -
+                                        <field name="note"/>
+                                    </em>
+                                </div>
+                                <a t-attf-href="https://maps.google.com/maps?q={{record.full_address.raw_value}}"
+                                   target="_blank"
+                                   class="fa fa-map-marker oe_kanban_action oe_kanban_action_a float-start ml-1 mt-1">
+                                </a>
+                                <a t-attf-href="https://maps.google.com/maps?q={{record.full_address.raw_value}}"
+                                   target="_blank" style="padding-left: 3px;"
+                                   class="oe_kanban_action oe_kanban_action_a">
+                                    <field name="full_address"/>
+
+                                </a>
+                                <div class="o_kanban_record_bottom mt-3">
+
+                                    <!--                                    <div style="text-align: right;">-->
+                                    <!--                                        <u>-->
+                                    <!--                                            <small class="text-muted">Aksiyonlar</small>-->
+                                    <!--                                        </u>-->
+                                    <!--                                    </div>-->
+
+                                    <div class="oe_kanban_bottom_left" style="padding-left: 3px;"/>
+
+
+                                    <div class="oe_kanban_bottom_right float-end pe-auto">
+
+                                        <field name="contact_html" widget="html"/>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+
+    <record id="skts_evening_route_kanban_view" model="ir.ui.view">
+        <field name="name">skts.registration.kanban Evening Route</field>
+        <field name="model">skts.registration</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" default_group_by="evening_driver_id" default_order="evening_sequence"
+                    create="0"
+                    archivable="0" group_create="0" group_edit="0" group_delete="0" quick_create="0">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="place_term_ids"/>
+                <field name="type_id"/>
+                <field name="place_id"/>
+                <field name="full_address"/>
+                <field name="contact_html" widget="html"/>
+                <field name="evening_sequence" widget="handle"/>
+                <field name="evening_seat_state"/>
+                <progressbar field="evening_seat_state"
+                             colors='{"full": "success", "below_seat_limit": "info", "above_seat_limit": "danger"}'/>
+
+                <templates>
+                    <t t-name="kanban-box">
+
+                        <div class="oe_kanban_global_click">
+                            <div>
+                                <h4>
+                                    <field name="name"/>
+                                </h4>
+                                <div class="mb-1" t-if="record.note.raw_value!=false">
+                                    <em>
+                                        -
+                                        <field name="note"/>
+                                    </em>
+                                </div>
+                                <a t-attf-href="https://maps.google.com/maps?q={{record.full_address.raw_value}}"
+                                   target="_blank"
+                                   class="fa fa-map-marker oe_kanban_action oe_kanban_action_a float-start ml-1 mt-1">
+                                </a>
+                                <a t-attf-href="https://maps.google.com/maps?q={{record.full_address.raw_value}}"
+                                   target="_blank" style="padding-left: 3px;"
+                                   class="oe_kanban_action oe_kanban_action_a">
+                                    <field name="full_address"/>
+
+                                </a>
+                                <div class="o_kanban_record_bottom mt-3">
+
+                                    <!--                                    <div style="text-align: right;">-->
+                                    <!--                                        <u>-->
+                                    <!--                                            <small class="text-muted">Aksiyonlar</small>-->
+                                    <!--                                        </u>-->
+                                    <!--                                    </div>-->
+
+                                    <div class="oe_kanban_bottom_left" style="padding-left: 3px;"/>
+
+
+                                    <div class="oe_kanban_bottom_right float-end pe-auto">
+
+                                        <field name="contact_html" widget="html"/>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="skts_morning_route_action">
+        <field name="name">Morning Route</field>
+        <field name="res_model">skts.registration</field>
+        <field name="view_mode">kanban,form</field>
+        <field name="domain">[('state', '=', 'registered'), ('place_term_ids.show_in_lists', '=', True)]</field>
+        <field name="context">{
+            'group_by': ['morning_driver_id'],
+            'kanban_view_ref': 'skts.skts_morning_route_kanban_view',
+            }
+        </field>
+    </record>
+
+
+    <record model="ir.actions.act_window" id="skts_evening_route_action">
+        <field name="name">Evening Route</field>
+        <field name="res_model">skts.registration</field>
+        <field name="view_mode">kanban,form</field>
+        <field name="domain">[('state', '=', 'registered'), ('place_term_ids.show_in_lists', '=', True)]</field>
+        <field name="context">{
+            'group_by': ['evening_driver_id'],
+            'kanban_view_ref': 'skts.skts_evening_route_kanban_view',
+            }
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="skts_all_routes_action">
+        <field name="name">All Routes</field>
+        <field name="res_model">skts.registration</field>
+        <field name="view_mode">tree</field>
+        <field name="domain">[('state', '=', 'registered'), ('place_term_ids.show_in_lists', '=', True)]</field>
+        <field name="context">{
+            'tree_view_ref': 'skts.skts_route_view_tree',
+            }
+        </field>
+    </record>
+
+    <menuitem name="Route" id="skts_route_menu" parent="skts_root_menu" sequence="50" groups="skts.group_manager"/>
+
+
+    <menuitem id="skts_all_routes_menu"
+              name="All Routes"
+              action="skts_all_routes_action"
+              sequence="9"
+              parent="skts_route_menu"
+              groups="skts.group_manager"
+    />
+
+    <menuitem id="skts_morning_route_menu"
+              name="Morning Route"
+              action="skts_morning_route_action"
+              sequence="10"
+              parent="skts_route_menu"
+              groups="skts.group_manager"
+    />
+
+    <menuitem id="skts_evening_route_menu"
+              name="Evening Route"
+              action="skts_evening_route_action"
+              sequence="20"
+              parent="skts_route_menu"
+              groups="skts.group_manager"
+
+    />
+
+
+</odoo>

@@ -35,8 +35,7 @@
         'views/skts_driver_view.xml',
 
 
-        'views/skts_morning_route_view.xml',
-        'views/skts_evening_route_view.xml',
+        'views/skts_route_view.xml',
         'views/skts_registration_my_list_view.xml',
 
         'views/skts_registration_view.xml',
