@@ -42,33 +42,34 @@
                 </header>
                 <sheet>
 
-                    <div class="oe_title">
-                        <h1 class="d-flex flex-row">
-                            <field name="name" placeholder="Type the person name here..."
-                                   style="font-size: min(4vw, 2.6rem);"/>
-                        </h1>
-                    </div>
-
-
-                    <!--                    <div class="oe_button_box" name="button_box"-->
-                    <!--                         attrs="{'invisible':['|',('state','!=','registered'),('id','=',False)]}">-->
-                    <!--                        <button class="oe_stat_button"-->
-                    <!--                                name="%(skts_payment_action)d"-->
-                    <!--                                groups="skts.group_manager"-->
-                    <!--                                type="action" icon="fa-lira-sign">-->
-                    <!--                            <div class="o_field_widget o_stat_info">-->
-                    <!--                                <span class="o_stat_text">Add</span>-->
-                    <!--                                <span class="o_stat_text">Context Action</span>-->
-                    <!--                            </div>-->
-                    <!--                        </button>-->
+                    <!--                    <div class="oe_title">-->
+                    <!--                        <h1 class="d-flex flex-row">-->
+                    <!--                            <field name="name" placeholder="Type the person name here..."-->
+                    <!--                                   style="font-size: min(4vw, 2.6rem);"/>-->
+                    <!--                        </h1>-->
                     <!--                    </div>-->
+
+
+                    <div class="oe_button_box" name="button_box"
+                         attrs="{'invisible':['|',('state','!=','registered'),('id','=',False)]}">
+                        <button class="oe_stat_button"
+                                name="%(skts_payment_action)d"
+                                groups="skts.group_manager"
+                                type="action" icon="fa-lira-sign">
+                            <div class="o_field_widget o_stat_info">
+                                <field name="name" class="o_stat_value"/>
+                                <span class="o_stat_text">Ödendi</span>
+                                <span class="o_stat_text">Ödendi</span>
+                            </div>
+                        </button>
+                    </div>
 
 
                     <group>
 
 
                         <group string="Person Information">
-
+                            <field name="name"/>
                             <field name="birth_year"/>
                             <field name="phone"/>
                             <field name="district"/>
