@@ -41,6 +41,27 @@
     </record>
 
 
+        <record model="ir.ui.view" id="skts_payment_plan_view_form">
+        <field name="name">Payment Plan</field>
+        <field name="model">skts.payment</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="term_id"/>
+                        <field name="price"/>
+                        <field name="name" required="0" invisible="1"/>
+                        <field name="type" attrs="{'invisible':[('date','=',False)], 'readonly':[('date','=',False)], 'required':[('date','!=',False)]}"/>
+
+                        <field name="sequence" attrs="{'invisible':[('id','=',False)]}"/>
+                    </group>
+                </sheet>
+
+            </form>
+        </field>
+    </record>
+
+
     <record model="ir.actions.act_window" id="skts_payment_action">
         <field name="name">Payments</field>
         <field name="res_model">skts.payment</field>

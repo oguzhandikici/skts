@@ -6,8 +6,11 @@ class SKTSPlace(models.Model):
     _description = "Places"
 
     name = fields.Char(string="Place Name", required=True)
+    website_display_name = fields.Char()
+
     term_ids = fields.One2many("skts.place.term", "place_id", string="Terms")
     registration_type_ids = fields.One2many("skts.place.registration.type", "place_id", string="Registration Types")
+
     open_to_register = fields.Boolean(default=True)
     active = fields.Boolean(default=True)
 
@@ -18,8 +21,28 @@ class SKTSPlaceTerm(models.Model):
 
     place_id = fields.Many2one("skts.place", required=True)
 
+    registration_ids = fields.Many2many("skts.registration", "skts_registration_term_rel",
+                                        "term_id", "registration_id", required=True, string="Registrations")
+
     color = fields.Integer('Color Index', default=5)
     website_display_name = fields.Char(compute="_compute_website_display_name")
+
+    name = fields.Char(string="Term Name", required=True)
+    date_start = fields.Date(string="Start Date", required=True)
+    date_end = fields.Date(string="End Date", required=True)
+
+    open_to_register = fields.Boolean(default=True)
+    show_in_lists = fields.Boolean(default=True)
+    active = fields.Boolean(default=True)
+
+    payment_count = fields.Integer(help="Will create this times of payment while creating a payment plan")
+    first_payment_date = fields.Date()
+    next_payment_after = fields.Integer(default=1)
+    next_payment_after_type = fields.Selection([
+        ('days', 'Day(s)'),
+        ('weeks', 'Week(s)'),
+        ('months', 'Month(s)')
+    ], default='months')
 
     @api.depends("name", "date_start", "date_end")
     def _compute_website_display_name(self):
@@ -31,19 +54,8 @@ class SKTSPlaceTerm(models.Model):
             else:
                 record.website_display_name = ""
 
-    name = fields.Char(string="Term Name", required=True)
-    date_start = fields.Date(string="Start Date", required=True)
-    date_end = fields.Date(string="End Date", required=True)
 
-    open_to_register = fields.Boolean(default=True)
-    show_in_lists = fields.Boolean(default=True)
-    active = fields.Boolean(default=True)
-
-    registration_ids = fields.Many2many("skts.registration", "skts_registration_term_rel",
-                                        "term_id", "registration_id", required=True, string="Registrations")
-
-
-class SKTSPlaceTermType(models.Model):
+class SKTSPlaceType(models.Model):
     _name = "skts.place.registration.type"
     _description = "Place Registration Types"
 

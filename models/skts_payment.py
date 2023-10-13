@@ -17,11 +17,13 @@ class Payment(models.Model):
         ('cash', 'Cash'),
         ('other', 'Other'),
     ], string="Payment Type")
+    expected_date = fields.Date()
 
     sequence = fields.Integer(default=1, string="Payment Order")
     color = fields.Integer('Color Index', compute="_compute_color")
 
     registration_id = fields.Many2one("skts.registration", required=True, ondelete="cascade")
+    term_id = fields.Many2one('skts.registration.term')
 
     @api.depends("date")
     def _compute_color(self):

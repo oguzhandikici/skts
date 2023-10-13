@@ -5,12 +5,14 @@
         <field name="priority">10</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="place_id"/>
-                <field name="name"/>
+                <control>
+                    <create string="Add a Term"/>
+                </control>
+                <field name="name" placeholder="Enter a term name (Ex: 1st Term)..."/>
                 <field name="date_start"/>
                 <field name="date_end"/>
-                <field name="open_to_register"/>
-                <field name="show_in_lists"/>
+                <field name="open_to_register" widget="boolean_toggle"/>
+                <field name="show_in_lists" widget="boolean_toggle"/>
                 <field name="color" widget="color_picker"/>
             </tree>
         </field>
@@ -29,6 +31,47 @@
                 <field name="date_start"/>
                 <field name="date_end"/>
             </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="skts_place_term_view_form">
+        <field name="name">skts.place.term.form</field>
+        <field name="model">skts.place.term</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" placeholder="Enter a term name (Ex: 1st Term)..."/>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+
+                        </group>
+                        <group>
+                            <field name="open_to_register" widget="boolean_toggle"/>
+                            <field name="show_in_lists" widget="boolean_toggle"/>
+                            <field name="color" widget="color_picker"/>
+                        </group>
+                    </group>
+
+                    <group string="Payment Settings">
+                        <group>
+                            <field name="payment_count"/>
+                            <field name="first_payment_date"/>
+
+                        </group>
+                    </group>
+
+                    <group>
+                        <label for="next_payment_after" string="Payment Frequency"/>
+                        <div>
+                            <field name="next_payment_after" class="oe_inline"/>
+                            <field name="next_payment_after_type" class="oe_inline"/>
+                        </div>
+                    </group>
+                </sheet>
+
+            </form>
         </field>
     </record>
 

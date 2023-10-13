@@ -22,15 +22,12 @@ odoo.define('skts.website_form', function(require) {
                 fields: ['id', 'website_display_name'],
             }).then(function(terms) {
                 terms.forEach(function(term) {
-                    // Yeni bir div oluşturun
                     var yeniDiv = document.createElement('div');
                     yeniDiv.className = 'checkbox col-12';
 
-                    // Yeni bir form-check div oluşturun
                     var yeniFormCheck = document.createElement('div');
                     yeniFormCheck.className = 'form-check';
 
-                    // Yeni bir checkbox oluşturun
                     var yeniCheckbox = document.createElement('input');
                     yeniCheckbox.type = 'checkbox';
                     yeniCheckbox.className = 's_website_form_input form-check-input';
@@ -43,18 +40,15 @@ odoo.define('skts.website_form', function(require) {
                         yeniCheckbox.click();
                     }
 
-                    // Yeni bir label oluşturun
                     var yeniLabel = document.createElement('label');
                     yeniLabel.className = 'form-check-label s_website_form_check_label';
                     yeniLabel.setAttribute('for', "checkboxid" + term.id);
-                    yeniLabel.textContent = term.website_display_name; // Bu satırı düzelttim.
+                    yeniLabel.textContent = term.website_display_name;
 
-                    // Checkbox ve label'ı ilgili div içine ekleyin
                     yeniFormCheck.appendChild(yeniCheckbox);
                     yeniFormCheck.appendChild(yeniLabel);
                     yeniDiv.appendChild(yeniFormCheck);
 
-                    // Yeni oluşturulan div'i "placeTermField" değişkenine ekleyin (hatalı değişken adı düzeltildi).
                     placeTermField.appendChild(yeniDiv);
 
                 });

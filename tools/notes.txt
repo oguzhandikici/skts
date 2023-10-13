@@ -1,3 +1,6 @@
+TODO: 'skts.place.term' -> 'skts.place.type.term'
+TODO: 'skts.place.registration.type' -> 'skts.place.type'
+
 Odoo Tema Rengi:
     >>> addons/web/static/src/scss/primary_variables.scss
         $o-community-color: #5b73ab

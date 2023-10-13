@@ -42,19 +42,7 @@
                     </group>
 
                     <group string="Terms">
-                        <field name="term_ids" colspan="2" nolabel="1">
-                            <tree editable="bottom">
-                                <control>
-                                    <create string="Add a Term"/>
-                                </control>
-                                <field name="name" placeholder="Enter a term name (Ex: 1st Term)..."/>
-                                <field name="date_start"/>
-                                <field name="date_end"/>
-                                <field name="open_to_register" widget="boolean_toggle"/>
-                                <field name="show_in_lists" widget="boolean_toggle"/>
-                                <field name="color" widget="color_picker"/>
-                            </tree>
-                        </field>
+                        <field name="term_ids" colspan="2" nolabel="1"/>
                     </group>
                 </sheet>
             </form>
