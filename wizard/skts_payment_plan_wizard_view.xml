@@ -1,0 +1,26 @@
+<odoo>
+
+    <record model="ir.ui.view" id="skts_payment_plan_wizard_view_form">
+        <field name="name">skts.payment.plan.wizard.form</field>
+        <field name="model">skts.payment.plan.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+
+                        <field name="price"/>
+                        <field name="term_ids" options="{'no_open': True, 'no_create': True}"
+                               domain="[('id', 'in', context.get('domain_term_ids'))]" widget="many2many_tags"/>
+                        <field name="registration_ids" invisible="1"/>
+
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Create Payment Plan" name="create_payment_plan" class="btn-primary" type="object"/>
+                    <button string="Cancel" class="btn-secondary" type="object" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

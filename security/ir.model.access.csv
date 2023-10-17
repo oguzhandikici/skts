@@ -4,6 +4,10 @@ access_skts_registration_manager,skts_registration_manager,model_skts_registrati
 
 access_skts_payment_manager,skts_payment_manager,model_skts_payment,group_manager,1,1,1,1
 
+access_skts_payment_plan_wizard_manager,skts_payment_plan_wizard_manager,model_skts_payment_plan_wizard,group_manager,1,1,1,1
+
+access_skts_place_term_payment_plan_manager,skts_place_term_payment_plan_manager,model_skts_place_term_payment_plan,group_manager,1,1,1,1
+
 access_skts_driver_manager,skts_driver_manager,model_skts_driver,group_manager,1,1,1,1
 
 access_skts_place_manager,skts_place_manager,model_skts_place,group_manager,1,1,1,1

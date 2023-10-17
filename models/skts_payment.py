@@ -9,6 +9,7 @@ class Payment(models.Model):
     _rec_name = "display_name"
 
     display_name = fields.Html(compute="_compute_display_name")
+    term_id = fields.Many2one('skts.place.term')
     name = fields.Char(string="Payment Name", required=True)
     price = fields.Integer(required=True, string="Price (₺)")
     date = fields.Date(string="Payment Date")
@@ -23,7 +24,9 @@ class Payment(models.Model):
     color = fields.Integer('Color Index', compute="_compute_color")
 
     registration_id = fields.Many2one("skts.registration", required=True, ondelete="cascade")
-    term_id = fields.Many2one('skts.registration.term')
+    registration_term_ids = fields.Many2many(related='registration_id.place_term_ids', string="Registration Terms")
+    payment_plan_id = fields.Many2one('skts.place.term.payment.plan',
+                                      help='Payment Plan ID if created from payment plan action')
 
     @api.depends("date")
     def _compute_color(self):
@@ -53,7 +56,19 @@ class Payment(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        # TODO: BURDASIN
         for value in vals_list:
             new_sequence = len(self.env['skts.registration'].browse([value['registration_id']]).payment_ids) + 1
             value['sequence'] = new_sequence
         return super().create(vals_list)
+
+
+class PlaceTermPayment(models.Model):
+    _name = "skts.place.term.payment.plan"
+    _description = "Place Term Payment Plan"
+
+    term_id = fields.Many2one('skts.place.term')
+    name = fields.Char(required=True)
+    expected_date = fields.Date()
+
+    sequence = fields.Integer(default=1, string="Payment Order")

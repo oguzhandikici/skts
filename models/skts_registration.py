@@ -118,7 +118,7 @@ class Registration(models.Model):
         ('below_seat_limit', 'Below Seat Limit'),
         ('full', 'Full'),
         ('above_seat_limit', 'Above Seat Limit'),
-    ], compute="_compute_morning_seat_state", search="_search_seat_state")
+    ], compute="_compute_morning_seat_state")
 
     evening_driver_id = fields.Many2one("skts.driver", group_expand="_group_expand_drivers")
     evening_hour = fields.Float(group_operator=False)
@@ -127,16 +127,23 @@ class Registration(models.Model):
         ('below_seat_limit', 'Below Seat Limit'),
         ('full', 'Full'),
         ('above_seat_limit', 'Above Seat Limit'),
-    ], compute="_compute_evening_seat_state", search="_search_seat_state")
+    ], compute="_compute_evening_seat_state")
 
     payment_ids = fields.One2many("skts.payment", "registration_id", string="Payments")
 
     def create_payment_plan(self):
-        pass
-
-    def _search_seat_state(self, operator, value):
-        # To prevent console warning
-        return [('id', 'in', [])]
+        return {
+            'name': _('Payment Plan'),
+            'type': 'ir.actions.act_window',
+            'view_id': self.env.ref('skts.skts_payment_plan_wizard_view_form').id,
+            'view_mode': 'form',
+            'res_model': 'skts.payment.plan.wizard',
+            'target': 'new',
+            'context': {
+                'default_registration_ids': self.ids,
+                'domain_term_ids': self.mapped('place_term_ids').ids
+            }
+        }
 
     @api.depends("morning_driver_id.seats", "morning_driver_id")
     def _compute_morning_seat_state(self):

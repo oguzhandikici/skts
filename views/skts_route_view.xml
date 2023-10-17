@@ -6,14 +6,14 @@
         <field name="arch" type="xml">
             <tree expand="1" duplicate="0" create="0" editable="bottom">
                 <field name="morning_driver_id"
-                       options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True, 'no_create': True}"
+                       options="{'no_open': True, 'no_create': True}"
                        string="MD"/>
                 <field name="morning_sequence"
                        string="MS"/>
                 <field name="morning_hour" widget="float_time"
                        string="MH"/>
                 <field name="evening_driver_id"
-                       options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True, 'no_create': True}"
+                       options="{'no_open': True, 'no_create': True}"
                        string="ED"/>
                 <field name="evening_sequence"
                        string="ES"/>
@@ -21,7 +21,7 @@
                        string="EH"/>
                 <field name="name" readonly="1"/>
                 <field name="type_id" readonly="1"
-                       options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True, 'no_create': True}"/>
+                       options="{'no_open': True, 'no_create': True}"/>
                 <field name="place_term_ids" widget="many2many_tags" readonly="1" options="{'color_field': 'color'}"/>
                 <field name="full_address" readonly="1"/>
                 <button name="open_map" string="Open Map" type="object" class="btn-secondary"

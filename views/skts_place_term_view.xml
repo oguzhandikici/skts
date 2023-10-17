@@ -13,7 +13,7 @@
                 <field name="date_end"/>
                 <field name="open_to_register" widget="boolean_toggle"/>
                 <field name="show_in_lists" widget="boolean_toggle"/>
-                <field name="color" widget="color_picker"/>
+                <field name="payment_plan_ids"/>
             </tree>
         </field>
     </record>
@@ -40,7 +40,7 @@
         <field name="arch" type="xml">
             <form>
                 <sheet>
-                    <group>
+                    <group string="Term Settings">
                         <group>
                             <field name="name" placeholder="Enter a term name (Ex: 1st Term)..."/>
                             <field name="date_start"/>
@@ -54,20 +54,16 @@
                         </group>
                     </group>
 
-                    <group string="Payment Settings">
-                        <group>
-                            <field name="payment_count"/>
-                            <field name="first_payment_date"/>
+                    <group string="Payment Plan">
 
-                        </group>
-                    </group>
+                        <field name="payment_plan_ids" colspan="2" nolabel="1">
+                            <tree editable="bottom">
+                                <field name="sequence" widget="handle"/>
+                                <field name="name"/>
+                                <field name="expected_date"/>
+                            </tree>
+                        </field>
 
-                    <group>
-                        <label for="next_payment_after" string="Payment Frequency"/>
-                        <div>
-                            <field name="next_payment_after" class="oe_inline"/>
-                            <field name="next_payment_after_type" class="oe_inline"/>
-                        </div>
                     </group>
                 </sheet>
 

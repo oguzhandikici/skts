@@ -12,6 +12,8 @@
                 <field name="place_id"/>
                 <field name="type_id"/>
                 <field name="place_term_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                <field name="payment_ids"/>
+
                 <field name="date" invisible="context.get('mylist_view')"/>
 
                 <field name="state" invisible="1"/>
@@ -98,13 +100,13 @@
                         <group string="Registration Information">
                             <field name="date"/>
                             <field name="place_id" widget="selection"
-                                   options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True, 'no_create': True}"/>
+                                   options="{'no_open': True, 'no_create': True}"/>
 
                             <field name="type_id" widget="selection"
                                    domain="[('place_id', '=', place_id)]"
                                    attrs="{'invisible':[('place_id','=',False)]}"
                                    force_save="1"
-                                   options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True, 'no_create': True}"/>
+                                   options="{'no_open': True, 'no_create': True}"/>
                             <field name="place_term_ids"
                                    attrs="{'invisible':[('place_id','=',False)]}"
                                    context="{'tree_view_ref': 'skts.skts_place_term_registration_view_tree', 'form_view_ref': 'skts.skts_place_term_registration_view_form'}"/>
@@ -116,7 +118,7 @@
                             <group>
                                 <group attrs="{'invisible':[('state','not in',['registered'])]}">
                                     <field name="morning_driver_id"
-                                           options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True, 'no_create': True}"/>
+                                           options="{'no_open': True, 'no_create': True}"/>
                                     <field name="morning_hour" widget="float_time"/>
                                     <field name="morning_sequence"/>
                                 </group>
@@ -124,7 +126,7 @@
 
                                 <group attrs="{'invisible':[('state','not in',['registered'])]}">
                                     <field name="evening_driver_id"
-                                           options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True, 'no_create': True}"/>
+                                           options="{'no_open': True, 'no_create': True}"/>
                                     <field name="evening_hour" widget="float_time"/>
                                     <field name="evening_sequence"/>
                                 </group>

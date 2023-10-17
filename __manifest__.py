@@ -19,6 +19,7 @@
     "data": [
         'data/model.xml',
         'data/params.xml',
+        'data/actions.xml',
 
         'security/security_groups.xml',
         'security/ir.model.access.csv',
@@ -39,6 +40,8 @@
         'views/skts_registration_my_list_view.xml',
 
         'views/skts_registration_view.xml',
+
+        'wizard/skts_payment_plan_wizard_view.xml',
 
     ],
     'assets': {

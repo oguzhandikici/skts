@@ -35,14 +35,7 @@ class SKTSPlaceTerm(models.Model):
     show_in_lists = fields.Boolean(default=True)
     active = fields.Boolean(default=True)
 
-    payment_count = fields.Integer(help="Will create this times of payment while creating a payment plan")
-    first_payment_date = fields.Date()
-    next_payment_after = fields.Integer(default=1)
-    next_payment_after_type = fields.Selection([
-        ('days', 'Day(s)'),
-        ('weeks', 'Week(s)'),
-        ('months', 'Month(s)')
-    ], default='months')
+    payment_plan_ids = fields.One2many('skts.place.term.payment.plan', 'term_id')
 
     @api.depends("name", "date_start", "date_end")
     def _compute_website_display_name(self):

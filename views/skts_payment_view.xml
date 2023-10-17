@@ -3,7 +3,7 @@
         <field name="name">skts.payment.tree</field>
         <field name="model">skts.payment</field>
         <field name="arch" type="xml">
-            <tree decoration-warning="date==False" decoration-bf="id!=False" decoration-success="date!=False">
+            <tree expand="1" decoration-warning="date==False" decoration-bf="id!=False" decoration-success="date!=False">
                 <control>
                     <create string="Add a Payment"/>
                 </control>
@@ -14,6 +14,8 @@
                 <field name="date"/>
 
                 <field name="type" attrs="{'readonly':[('date','=',False)]}"/>
+                <field name="term_id"/>
+
 
             </tree>
         </field>
@@ -27,31 +29,14 @@
             <form>
                 <sheet>
                     <group>
+                        <field name="registration_term_ids" invisible="1"/>
+
+                        <field name="term_id" domain="[('id', 'in', registration_term_ids)]" options='{"no_open": True, "no_create": True}'/>
                         <field name="price"/>
                         <field name="name"/>
                         <field name="date"/>
-                        <field name="type" attrs="{'invisible':[('date','=',False)], 'readonly':[('date','=',False)], 'required':[('date','!=',False)]}"/>
-
-                        <field name="sequence" attrs="{'invisible':[('id','=',False)]}"/>
-                    </group>
-                </sheet>
-
-            </form>
-        </field>
-    </record>
-
-
-        <record model="ir.ui.view" id="skts_payment_plan_view_form">
-        <field name="name">Payment Plan</field>
-        <field name="model">skts.payment</field>
-        <field name="arch" type="xml">
-            <form>
-                <sheet>
-                    <group>
-                        <field name="term_id"/>
-                        <field name="price"/>
-                        <field name="name" required="0" invisible="1"/>
-                        <field name="type" attrs="{'invisible':[('date','=',False)], 'readonly':[('date','=',False)], 'required':[('date','!=',False)]}"/>
+                        <field name="type"
+                               attrs="{'invisible':[('date','=',False)], 'readonly':[('date','=',False)], 'required':[('date','!=',False)]}"/>
 
                         <field name="sequence" attrs="{'invisible':[('id','=',False)]}"/>
                     </group>
