@@ -36,4 +36,4 @@ class PaymentPlan(models.TransientModel):
                             }
                             vals_list.append(value)
         if vals_list:
-            self.env['skts.payment'].create(vals_list)
+            self.env['skts.payment'].with_context({'wizard': True}).create(vals_list)

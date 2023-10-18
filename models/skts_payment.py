@@ -1,4 +1,5 @@
 from odoo import models, fields, api, _
+from datetime import date
 from odoo.exceptions import UserError
 
 
@@ -18,7 +19,7 @@ class Payment(models.Model):
         ('cash', 'Cash'),
         ('other', 'Other'),
     ], string="Payment Type")
-    expected_date = fields.Date()
+    expected_date = fields.Date(string='Expected Payment Date')
 
     sequence = fields.Integer(default=1, string="Payment Order")
     color = fields.Integer('Color Index', compute="_compute_color")
@@ -26,7 +27,24 @@ class Payment(models.Model):
     registration_id = fields.Many2one("skts.registration", required=True, ondelete="cascade")
     registration_term_ids = fields.Many2many(related='registration_id.place_term_ids', string="Registration Terms")
     payment_plan_id = fields.Many2one('skts.place.term.payment.plan',
-                                      help='Payment Plan ID if created from payment plan action')
+                                      help='Payment Plan ID if created from payment plan action', ondelete="set null")
+    status = fields.Char(compute='_compute_status')
+
+    @api.depends('expected_date', 'date', 'sequence')
+    def _compute_status(self):
+        # TODO: BURDASIN
+        records = self.sorted('sequence')
+        next_payment = False
+        for record in records:
+            if record.date:
+                record.status = 'paid'
+            elif not record.date and not next_payment and record.expected_date >= date.today():
+                record.status = 'awaiting_payment'
+                next_payment = True
+            elif record.expected_date < date.today():
+                record.status = 'late'
+            else:
+                record.status = 'early'
 
     @api.depends("date")
     def _compute_color(self):
@@ -56,10 +74,12 @@ class Payment(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        # TODO: BURDASIN
+        print(self.env.context)
+        is_wizard = self.env.context.get('wizard')
         for value in vals_list:
-            new_sequence = len(self.env['skts.registration'].browse([value['registration_id']]).payment_ids) + 1
-            value['sequence'] = new_sequence
+            if not is_wizard:
+                new_sequence = len(self.env['skts.registration'].browse([value['registration_id']]).payment_ids) + 1
+                value['sequence'] = new_sequence
         return super().create(vals_list)
 
 

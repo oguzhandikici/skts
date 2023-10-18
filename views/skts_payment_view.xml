@@ -3,19 +3,25 @@
         <field name="name">skts.payment.tree</field>
         <field name="model">skts.payment</field>
         <field name="arch" type="xml">
-            <tree expand="1" decoration-warning="date==False" decoration-bf="id!=False" decoration-success="date!=False">
+            <tree expand="1"
+                  decoration-warning="status=='awaiting_payment'"
+                  decoration-success="status=='paid'"
+                  decoration-danger="status=='late'" decoration-bf="status=='late'"
+                  decoration-primary="status=='early'"
+            >
                 <control>
                     <create string="Add a Payment"/>
                 </control>
                 <field name="sequence" widget="handle"/>
                 <field name="price"/>
+                <field name="status" invisible="1"/>
 
                 <field name="name"/>
+                <field name="expected_date"/>
                 <field name="date"/>
-
                 <field name="type" attrs="{'readonly':[('date','=',False)]}"/>
                 <field name="term_id"/>
-
+                <field name="payment_plan_id" groups="base.group_no_one"/>
 
             </tree>
         </field>
@@ -31,9 +37,13 @@
                     <group>
                         <field name="registration_term_ids" invisible="1"/>
 
-                        <field name="term_id" domain="[('id', 'in', registration_term_ids)]" options='{"no_open": True, "no_create": True}'/>
+                        <field name="term_id" domain="[('id', 'in', registration_term_ids)]"
+                               options='{"no_open": True, "no_create": True}'/>
                         <field name="price"/>
                         <field name="name"/>
+                        <field name="expected_date"/>
+                        <field name="payment_plan_id" groups="base.group_no_one"/>
+
                         <field name="date"/>
                         <field name="type"
                                attrs="{'invisible':[('date','=',False)], 'readonly':[('date','=',False)], 'required':[('date','!=',False)]}"/>
