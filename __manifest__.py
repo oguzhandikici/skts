@@ -17,13 +17,13 @@
 
     'qweb': [],
     "data": [
-        'data/model.xml',
-        'data/params.xml',
-        'data/actions.xml',
-
         'security/security_groups.xml',
         'security/ir.model.access.csv',
         # 'security/access_rules.xml',
+
+        'data/model.xml',
+        'data/params.xml',
+        'data/actions.xml',
 
         'views/menu_item_view.xml',
 
