@@ -7,7 +7,7 @@ class Payment(models.Model):
     _name = "skts.payment"
     _description = "Payments"
     _order = "sequence"
-    _rec_name = "display_name"
+    _rec_name = "name"
 
     display_name = fields.Html(compute="_compute_display_name")
     term_id = fields.Many2one('skts.place.term')
@@ -19,7 +19,7 @@ class Payment(models.Model):
         ('cash', 'Cash'),
         ('other', 'Other'),
     ], string="Payment Type")
-    expected_date = fields.Date(string='Expected Payment Date')
+    expected_date = fields.Date(string='Expected Payment Date', required=True)
 
     sequence = fields.Integer(default=1, string="Payment Order")
     color = fields.Integer('Color Index', compute="_compute_color")
@@ -28,7 +28,12 @@ class Payment(models.Model):
     registration_term_ids = fields.Many2many(related='registration_id.place_term_ids', string="Registration Terms")
     payment_plan_id = fields.Many2one('skts.place.term.payment.plan',
                                       help='Payment Plan ID if created from payment plan action', ondelete="set null")
-    status = fields.Char(compute='_compute_status')
+    status = fields.Selection([
+        ('paid', 'Paid'),
+        ('awaiting_payment', 'Awaiting Payment'),
+        ('late', 'Late'),
+        ('early', 'Early')
+    ], compute='_compute_status')
 
     @api.depends('expected_date', 'date', 'sequence')
     def _compute_status(self):
@@ -36,15 +41,18 @@ class Payment(models.Model):
         records = self.sorted('sequence')
         next_payment = False
         for record in records:
-            if record.date:
-                record.status = 'paid'
-            elif not record.date and not next_payment and record.expected_date >= date.today():
-                record.status = 'awaiting_payment'
-                next_payment = True
-            elif record.expected_date < date.today():
-                record.status = 'late'
+            if record.expected_date:
+                if record.date:
+                    record.status = 'paid'
+                elif not record.date and not next_payment and record.expected_date >= date.today():
+                    record.status = 'awaiting_payment'
+                    next_payment = True
+                elif record.expected_date < date.today():
+                    record.status = 'late'
+                else:
+                    record.status = 'early'
             else:
-                record.status = 'early'
+                record.status = ''
 
     @api.depends("date")
     def _compute_color(self):
@@ -54,27 +62,26 @@ class Payment(models.Model):
             else:
                 record.color = 2
 
-    @api.depends("name", "price")
-    def _compute_display_name(self):
-        green_flag = False
-        for record in self:
-            if record.id:
-                if record.date:
-                    is_paid = '/ <font color="green">Ödendi</font>'
-                elif not green_flag:
-                    is_paid = '/ <font color="orange">Bekliyor</font>'
-                    green_flag = True
-                elif green_flag:
-                    is_paid = '/ <font color="gray">Bekliyor</font>'
-
-                record.display_name = f"<b>{record.name} / ₺{record.price} {is_paid}</b>"
-
-            else:
-                record.display_name = '<b><font color="pink">Kaydet tuşuna basın</font></b>'
+    # @api.depends("name", "price")
+    # def _compute_display_name(self):
+    #     green_flag = False
+    #     for record in self:
+    #         if record.id:
+    #             if record.date:
+    #                 is_paid = '/ <font color="green">Ödendi</font>'
+    #             elif not green_flag:
+    #                 is_paid = '/ <font color="orange">Bekliyor</font>'
+    #                 green_flag = True
+    #             elif green_flag:
+    #                 is_paid = '/ <font color="gray">Bekliyor</font>'
+    #
+    #             record.display_name = f"<b>{record.name} / ₺{record.price} {is_paid}</b>"
+    #
+    #         else:
+    #             record.display_name = '<b><font color="pink">Kaydet tuşuna basın</font></b>'
 
     @api.model_create_multi
     def create(self, vals_list):
-        print(self.env.context)
         is_wizard = self.env.context.get('wizard')
         for value in vals_list:
             if not is_wizard:

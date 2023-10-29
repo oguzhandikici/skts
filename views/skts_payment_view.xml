@@ -14,14 +14,14 @@
                 </control>
                 <field name="sequence" widget="handle"/>
                 <field name="price"/>
-                <field name="status" invisible="1"/>
-
                 <field name="name"/>
-                <field name="expected_date"/>
+                <field name="expected_date" widget="remaining_days"/>
                 <field name="date"/>
                 <field name="type" attrs="{'readonly':[('date','=',False)]}"/>
                 <field name="term_id"/>
                 <field name="payment_plan_id" groups="base.group_no_one"/>
+                <field name="status"/>
+
 
             </tree>
         </field>
@@ -35,20 +35,31 @@
             <form>
                 <sheet>
                     <group>
-                        <field name="registration_term_ids" invisible="1"/>
+                        <group string="Payment Information">
+                            <group>
+                                <field name="sequence" attrs="{'invisible':[('id','=',False)]}"/>
 
-                        <field name="term_id" domain="[('id', 'in', registration_term_ids)]"
-                               options='{"no_open": True, "no_create": True}'/>
-                        <field name="price"/>
-                        <field name="name"/>
-                        <field name="expected_date"/>
+                                <field name="name"/>
+                                <field name="term_id" domain="[('id', 'in', registration_term_ids)]"
+                                       options='{"no_open": True, "no_create": True}'/>
+                            </group>
+                            <group>
+                                <field name="price"/>
+
+                            </group>
+
+                        </group>
+                        <group string="Date Information">
+                            <field name="expected_date"/>
+
+                            <field name="date"/>
+                            <field name="type"
+                                   attrs="{'invisible':[('date','=',False)], 'readonly':[('date','=',False)], 'required':[('date','!=',False)]}"/>
+                        </group>
+
+                        <field name="registration_term_ids" invisible="1"/>
                         <field name="payment_plan_id" groups="base.group_no_one"/>
 
-                        <field name="date"/>
-                        <field name="type"
-                               attrs="{'invisible':[('date','=',False)], 'readonly':[('date','=',False)], 'required':[('date','!=',False)]}"/>
-
-                        <field name="sequence" attrs="{'invisible':[('id','=',False)]}"/>
                     </group>
                 </sheet>
 

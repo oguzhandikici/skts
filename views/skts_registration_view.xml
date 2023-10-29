@@ -59,9 +59,9 @@
                                 groups="skts.group_manager"
                                 type="action" icon="fa-lira-sign">
                             <div class="o_field_widget o_stat_info">
-                                <field name="name" class="o_stat_value"/>
-                                <span class="o_stat_text">Late Payment</span>
-                                <span class="o_stat_text">No Late Payments</span>
+                                <span class="o_stat_value"><field name="paid_count"/>/<field name="payment_count"/> Payments</span>
+                                <span class="o_stat_text text-success" attrs="{'invisible': [('payment_late_count', '!=', 0)]}">No Late Payments</span>
+                                <span class="o_stat_text text-danger" attrs="{'invisible': [('payment_late_count', '=', 0)]}"><field name="payment_late_count"/> Late Payment</span>
                             </div>
                         </button>
                     </div>

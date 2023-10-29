@@ -130,6 +130,16 @@ class Registration(models.Model):
     ], compute="_compute_evening_seat_state")
 
     payment_ids = fields.One2many("skts.payment", "registration_id", string="Payments")
+    paid_count = fields.Integer(compute="_compute_payment_count")
+    payment_count = fields.Integer(compute="_compute_payment_count")
+    payment_late_count = fields.Integer(compute="_compute_payment_count")
+
+    @api.depends('payment_ids')
+    def _compute_payment_count(self):
+        for record in self:
+            record.paid_count = record.payment_ids.filtered(lambda r: r.date is not False).__len__()
+            record.payment_late_count = record.payment_ids.filtered(lambda r: r.expected_date < fields.date.today()).__len__()
+            record.payment_count = record.payment_ids.__len__()
 
     def create_payment_plan(self):
         return {
