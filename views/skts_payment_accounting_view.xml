@@ -1,6 +1,6 @@
 <odoo>
-    <record model="ir.ui.view" id="skts_payment_view_tree">
-        <field name="name">skts.payment.tree</field>
+    <record model="ir.ui.view" id="skts_payment_accounting_view_tree">
+        <field name="name">skts.payment.accounting.tree</field>
         <field name="model">skts.payment</field>
         <field name="arch" type="xml">
             <tree expand="1"
@@ -12,24 +12,21 @@
                 <control>
                     <create string="Add a Payment"/>
                 </control>
-                <field name="sequence" widget="handle"/>
+                <field name="registration_id"/>
                 <field name="price"/>
                 <field name="name"/>
-                <field name="expected_date" widget="remaining_days"/>
+                <field name="expected_date"/>
                 <field name="date"/>
-                <field name="type" attrs="{'readonly':[('date','=',False)]}"/>
+                <field name="type"/>
                 <field name="term_id"/>
-                <field name="payment_plan_id" groups="base.group_no_one"/>
                 <field name="status"/>
-
-
             </tree>
         </field>
     </record>
 
 
-    <record model="ir.ui.view" id="skts_payment_view_form">
-        <field name="name">skts.payment.form</field>
+    <record model="ir.ui.view" id="skts_payment_accounting_view_form">
+        <field name="name">skts.payment.accounting.form</field>
         <field name="model">skts.payment</field>
         <field name="arch" type="xml">
             <form>
@@ -58,7 +55,6 @@
                         </group>
 
                         <field name="registration_term_ids" invisible="1"/>
-                        <field name="registration_id" invisible="1"/>
                         <field name="payment_plan_id" groups="base.group_no_one"/>
 
                     </group>
@@ -68,18 +64,35 @@
         </field>
     </record>
 
-
-    <record model="ir.actions.act_window" id="skts_payment_action">
-        <field name="name">Payments</field>
-        <field name="res_model">skts.payment</field>
-        <field name="view_mode">tree,form</field>
-        <field name="context">{
-            'default_registration_id': active_id,
-            'tree_view_ref': 'skts.skts_payment_view_tree',
-            'form_view_ref': 'skts.skts_payment_view_form',
-            }</field>
-        <field name="domain">[('registration_id', '=', active_id)]</field>
+       <record id="skts_payment_accounting_view_graph" model="ir.ui.view">
+        <field name="name">skts.payment.accounting.graph</field>
+        <field name="model">skts.payment</field>
+        <field name="arch" type="xml">
+            <graph type="pie" sample="1">
+                <field name="name"/>
+                <field name="sequence" invisible="1"/>
+                <field name="price" type="measure"/>
+            </graph>
+        </field>
     </record>
 
+
+    <record model="ir.actions.act_window" id="skts_payment_accounting_action">
+        <field name="name">Payments</field>
+        <field name="res_model">skts.payment</field>
+        <field name="view_mode">graph,tree,form</field>
+        <field name="context">{
+            'tree_view_ref': 'skts.skts_payment_accounting_view_tree',
+            'form_view_ref': 'skts.skts_payment_accounting_view_form',
+            }</field>
+        <field name="domain">[]</field>
+    </record>
+
+
+    <menuitem id="skts_payment_accounting_menu"
+              name="Accounting"
+              action="skts_payment_accounting_action"
+              sequence="65"
+              parent="skts_root_menu"/>
 
 </odoo>

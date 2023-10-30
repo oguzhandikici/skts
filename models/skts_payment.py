@@ -33,14 +33,11 @@ class Payment(models.Model):
         ('awaiting_payment', 'Awaiting Payment'),
         ('late', 'Late'),
         ('early', 'Early')
-    ], compute='_compute_status')
+    ], default='early')
 
-    @api.depends('expected_date', 'date', 'sequence')
-    def _compute_status(self):
-        # TODO: BURDASIN
-        records = self.sorted('sequence')
+    def compute_status(self):
         next_payment = False
-        for record in records:
+        for record in self:
             if record.expected_date:
                 if record.date:
                     record.status = 'paid'
@@ -62,24 +59,6 @@ class Payment(models.Model):
             else:
                 record.color = 2
 
-    # @api.depends("name", "price")
-    # def _compute_display_name(self):
-    #     green_flag = False
-    #     for record in self:
-    #         if record.id:
-    #             if record.date:
-    #                 is_paid = '/ <font color="green">Ödendi</font>'
-    #             elif not green_flag:
-    #                 is_paid = '/ <font color="orange">Bekliyor</font>'
-    #                 green_flag = True
-    #             elif green_flag:
-    #                 is_paid = '/ <font color="gray">Bekliyor</font>'
-    #
-    #             record.display_name = f"<b>{record.name} / ₺{record.price} {is_paid}</b>"
-    #
-    #         else:
-    #             record.display_name = '<b><font color="pink">Kaydet tuşuna basın</font></b>'
-
     @api.model_create_multi
     def create(self, vals_list):
         is_wizard = self.env.context.get('wizard')
@@ -87,7 +66,23 @@ class Payment(models.Model):
             if not is_wizard:
                 new_sequence = len(self.env['skts.registration'].browse([value['registration_id']]).payment_ids) + 1
                 value['sequence'] = new_sequence
-        return super().create(vals_list)
+
+        res = super().create(vals_list)
+
+        res.registration_id.payment_ids.compute_status()
+        return res
+
+    def write(self, vals):
+        if 'date' in vals:
+            if vals['date'] is False:
+                vals['type'] = False
+
+        res = super(Payment, self).write(vals)
+
+        compute_status = any(x in ['expected_date', 'date', 'sequence'] for x in vals)
+        if compute_status:
+            self.search([('registration_id', 'in', self.mapped('registration_id').ids)]).compute_status()
+        return res
 
 
 class PlaceTermPayment(models.Model):

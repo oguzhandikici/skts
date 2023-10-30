@@ -138,7 +138,7 @@ class Registration(models.Model):
     def _compute_payment_count(self):
         for record in self:
             record.paid_count = record.payment_ids.filtered(lambda r: r.date is not False).__len__()
-            record.payment_late_count = record.payment_ids.filtered(lambda r: r.expected_date < fields.date.today()).__len__()
+            record.payment_late_count = record.payment_ids.filtered(lambda r: r.date is False and r.expected_date < fields.date.today()).__len__()
             record.payment_count = record.payment_ids.__len__()
 
     def create_payment_plan(self):

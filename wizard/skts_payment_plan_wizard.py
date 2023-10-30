@@ -6,10 +6,7 @@ class PaymentPlan(models.TransientModel):
     _description = "Payment Plan Wizard"
 
     registration_ids = fields.Many2many('skts.registration')
-
     term_ids = fields.Many2many('skts.place.term', string="Terms")
-    # domain_term_ids = fields.One2many('skts.place.term', store=False)
-
     price = fields.Integer(required=True, string="Price (₺)")
 
     def create_payment_plan(self):
