@@ -36,6 +36,10 @@ class Payment(models.Model):
     ], default='early')
 
     def compute_status(self):
+        """
+        Computes the status of each payment of a single registration.
+        Call this method separately for every different registration_id
+        """
         next_payment = False
         for record in self:
             if record.expected_date:
