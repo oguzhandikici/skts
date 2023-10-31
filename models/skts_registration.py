@@ -1,6 +1,8 @@
 from odoo import models, fields, api, SUPERUSER_ID, _
 from odoo.exceptions import UserError
 from odoo.tools.misc import groupby
+from datetime import date
+
 import json
 
 
@@ -133,6 +135,29 @@ class Registration(models.Model):
     paid_count = fields.Integer(compute="_compute_payment_count")
     payment_count = fields.Integer(compute="_compute_payment_count")
     payment_late_count = fields.Integer(compute="_compute_payment_count")
+
+    def compute_payment_status(self):
+        """
+        Computes the status for each payment.
+        """
+        payments = self.payment_ids
+        if self.env.context.get('reorder'):
+            payments = self.payment_ids.sorted("sequence")
+
+        next_payment = False
+        for payment in payments:
+            if payment.expected_date:
+                if payment.date:
+                    payment.status = 'paid'
+                elif not payment.date and not next_payment and payment.expected_date >= date.today():
+                    payment.status = 'awaiting_payment'
+                    next_payment = True
+                elif payment.expected_date < date.today():
+                    payment.status = 'late'
+                else:
+                    payment.status = 'early'
+            else:
+                payment.status = ''
 
     @api.depends('payment_ids')
     def _compute_payment_count(self):

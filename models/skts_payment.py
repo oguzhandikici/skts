@@ -1,5 +1,4 @@
 from odoo import models, fields, api, _
-from datetime import date
 from odoo.exceptions import UserError
 
 
@@ -35,26 +34,6 @@ class Payment(models.Model):
         ('early', 'Early')
     ], default='early')
 
-    def compute_status(self):
-        """
-        Computes the status of each payment of a single registration.
-        Call this method separately for every different registration_id
-        """
-        next_payment = False
-        for record in self:
-            if record.expected_date:
-                if record.date:
-                    record.status = 'paid'
-                elif not record.date and not next_payment and record.expected_date >= date.today():
-                    record.status = 'awaiting_payment'
-                    next_payment = True
-                elif record.expected_date < date.today():
-                    record.status = 'late'
-                else:
-                    record.status = 'early'
-            else:
-                record.status = ''
-
     @api.depends("date")
     def _compute_color(self):
         for record in self:
@@ -73,7 +52,7 @@ class Payment(models.Model):
 
         res = super().create(vals_list)
 
-        res.registration_id.payment_ids.compute_status()
+        res.registration_id.compute_payment_status()
         return res
 
     def write(self, vals):
@@ -83,9 +62,9 @@ class Payment(models.Model):
 
         res = super(Payment, self).write(vals)
 
-        compute_status = any(x in ['expected_date', 'date', 'sequence'] for x in vals)
+        compute_status = any(edited_field in ['expected_date', 'date', 'sequence'] for edited_field in vals)
         if compute_status:
-            self.search([('registration_id', 'in', self.mapped('registration_id').ids)]).compute_status()
+            self.mapped('registration_id').with_context({'reorder': True}).compute_payment_status()
         return res
 
 
