@@ -14,6 +14,15 @@ Field çizgilerini her zaman görünür kılmak:
     >>> addons\web\static\src\views\form\form_controller.scss
         ".o_input:not(:hover):not(:focus)" altındaki
         "--o-input-border-color: transparent;" silinecek
+    >>> addons\web_editor\static\src\scss\web_editor.backend.scss (Text field için ayrıca yapmak gerekiyormuş)
+        ".o_form_view:not(o_field_highlight)" altındaki
+        "border: transparent" kısmını "border: var(--o-input-border-color)" olarak değiştir
+
+Many2many internal link buton rengi düzeltme:
+    >>> addons\web\static\src\legacy\scss\fields_extra.scss
+        "&.o_field_many2one .o_external_button" altındaki
+        "color: $o-community-color;" olarak değiştir
+
 
 Mobil Chrome header rengi ayarlaması:
    >>> addons/web/views/webclient_templates.xml
