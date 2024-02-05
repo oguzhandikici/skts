@@ -1,14 +1,12 @@
 from odoo import models, fields, api, _
-from odoo.exceptions import UserError
 
 
 class Payment(models.Model):
     _name = "skts.payment"
     _description = "Payments"
-    _order = "sequence"
+    _order = "expected_date asc"
     _rec_name = "name"
 
-    display_name = fields.Html(compute="_compute_display_name")
     term_id = fields.Many2one('skts.place.term')
     name = fields.Char(string="Payment Name", required=True)
     price = fields.Integer(required=True, string="Price (₺)")
@@ -20,7 +18,7 @@ class Payment(models.Model):
     ], string="Payment Type")
     expected_date = fields.Date(string='Expected Payment Date', required=True)
 
-    sequence = fields.Integer(default=1, string="Payment Order")
+    # sequence = fields.Integer(default=1, string="Payment Order")
     color = fields.Integer('Color Index', compute="_compute_color")
 
     registration_id = fields.Many2one("skts.registration", required=True, ondelete="cascade")
@@ -44,14 +42,7 @@ class Payment(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        is_wizard = self.env.context.get('wizard')
-        for value in vals_list:
-            if not is_wizard:
-                new_sequence = len(self.env['skts.registration'].browse([value['registration_id']]).payment_ids) + 1
-                value['sequence'] = new_sequence
-
         res = super().create(vals_list)
-
         res.registration_id.compute_payment_status()
         return res
 
@@ -62,15 +53,16 @@ class Payment(models.Model):
 
         res = super(Payment, self).write(vals)
 
-        compute_status = any(edited_field in ['expected_date', 'date', 'sequence'] for edited_field in vals)
+        compute_status = any(edited_field in ['expected_date', 'date'] for edited_field in vals)
         if compute_status:
-            self.mapped('registration_id').with_context({'reorder': True}).compute_payment_status()
+            self.mapped('registration_id').compute_payment_status()
         return res
 
 
 class PlaceTermPayment(models.Model):
     _name = "skts.place.term.payment.plan"
     _description = "Place Term Payment Plan"
+    _order = "expected_date asc"
 
     term_id = fields.Many2one('skts.place.term')
     name = fields.Char(required=True)

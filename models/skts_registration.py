@@ -140,9 +140,7 @@ class Registration(models.Model):
         """
         Computes the status for each payment.
         """
-        payments = self.payment_ids
-        if self.env.context.get('reorder'):
-            payments = self.payment_ids.sorted("sequence")
+        payments = self.payment_ids.sorted("expected_date")
 
         next_payment = False
         for payment in payments:
@@ -232,10 +230,13 @@ class Registration(models.Model):
 
     @api.model
     def _group_expand_drivers(self, stages, domain, order):
-        if not self.env.context.get("mylist_view"):
-            return self.env['skts.driver'].search([], order=order)
+        """
+        To show driver names in routing views even if they have no person assigned to their car.
+        """
+        if self.env.context.get("mylist_view"):
+            return stages  # Default
         else:
-            return stages
+            return self.env['skts.driver'].search([], order=order)  # Show every active driver
 
     @api.depends("full_address")
     def _compute_full_address(self):

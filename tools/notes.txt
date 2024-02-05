@@ -5,9 +5,15 @@ Odoo Tema Rengi:
     >>> addons/web/static/src/scss/primary_variables.scss
         $o-community-color: #5b73ab
 
+
 Form Width:
     >>> web_responsive\static\src\legacy\scss\web_responsive.scss
         .o_form_sheet 75%
+
+
+HTML Button Renkleri (Arama, SMS, WP gibi):
+    >>> addons/web_editor/static/src/scss/web_editor.backend.scss
+        ".o_field_html" altında "a:not(.btn)" -> "color: $o-community-color;" olacak
 
 
 Field çizgilerini her zaman görünür kılmak:
@@ -16,7 +22,7 @@ Field çizgilerini her zaman görünür kılmak:
         "--o-input-border-color: transparent;" silinecek
     >>> addons\web_editor\static\src\scss\web_editor.backend.scss (Text field için ayrıca yapmak gerekiyormuş)
         ".o_form_view:not(o_field_highlight)" altındaki
-        "border: transparent" kısmını "border: var(--o-input-border-color)" olarak değiştir
+        "border: $input-border-width solid transparent" kısmını "border: $input-border-width solid var(--o-input-border-color)" olarak değiştir
 
 Many2many internal link buton rengi düzeltme:
     >>> addons\web\static\src\legacy\scss\fields_extra.scss
@@ -37,15 +43,6 @@ Mobil form view başlık ayarlaması:
                 font-weight: $font-weight-bold;
                 color: $o-black;
             }
-
-
-
-
-
-
-
-
-
 
 
 

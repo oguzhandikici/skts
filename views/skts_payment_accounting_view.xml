@@ -34,8 +34,6 @@
                     <group>
                         <group string="Payment Information">
                             <group>
-                                <field name="sequence" attrs="{'invisible':[('id','=',False)]}"/>
-
                                 <field name="name"/>
                                 <field name="term_id" domain="[('id', 'in', registration_term_ids)]"
                                        options='{"no_open": True, "no_create": True}'/>
@@ -55,7 +53,6 @@
                         </group>
 
                         <field name="registration_term_ids" invisible="1"/>
-                        <field name="payment_plan_id" groups="base.group_no_one"/>
 
                     </group>
                 </sheet>
@@ -70,7 +67,6 @@
         <field name="arch" type="xml">
             <graph type="pie" sample="1">
                 <field name="name"/>
-                <field name="sequence" invisible="1"/>
                 <field name="price" type="measure"/>
             </graph>
         </field>

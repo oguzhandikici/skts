@@ -12,14 +12,13 @@
                 <control>
                     <create string="Add a Payment"/>
                 </control>
-                <field name="sequence" widget="handle"/>
                 <field name="price"/>
                 <field name="name"/>
-                <field name="expected_date" widget="remaining_days"/>
+                <field name="expected_date"/>
+                <field name="expected_date" string="Days Left" widget="remaining_days"/>
                 <field name="date"/>
                 <field name="type" attrs="{'readonly':[('date','=',False)]}"/>
                 <field name="term_id"/>
-                <field name="payment_plan_id" groups="base.group_no_one"/>
                 <field name="status"/>
 
 
@@ -37,8 +36,6 @@
                     <group>
                         <group string="Payment Information">
                             <group>
-                                <field name="sequence" attrs="{'invisible':[('id','=',False)]}"/>
-
                                 <field name="name"/>
                                 <field name="term_id" domain="[('id', 'in', registration_term_ids)]"
                                        options='{"no_open": True, "no_create": True}'/>
@@ -59,7 +56,6 @@
 
                         <field name="registration_term_ids" invisible="1"/>
                         <field name="registration_id" invisible="1"/>
-                        <field name="payment_plan_id" groups="base.group_no_one"/>
 
                     </group>
                 </sheet>

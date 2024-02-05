@@ -20,7 +20,7 @@ class PaymentPlan(models.TransientModel):
                     registration_payment_plan_ids = registration_id.payment_ids.mapped('payment_plan_id')
 
                     for term_payment_plan_id in term_payment_plan_ids:
-                        if term_payment_plan_id not in registration_payment_plan_ids:
+                        if term_payment_plan_id not in registration_payment_plan_ids:  # Prevent creating a payment record with the same payment plan
 
                             value = {
                                 'registration_id': registration_id.id,
@@ -28,9 +28,8 @@ class PaymentPlan(models.TransientModel):
                                 'name': term_payment_plan_id.name,
                                 'price': self.price,
                                 'expected_date': term_payment_plan_id.expected_date,
-                                'sequence': term_payment_plan_id.sequence,
                                 'term_id': term_id.id,
                             }
                             vals_list.append(value)
         if vals_list:
-            self.env['skts.payment'].with_context({'wizard': True}).create(vals_list)
+            self.env['skts.payment'].create(vals_list)
